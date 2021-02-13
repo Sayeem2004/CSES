@@ -4,3 +4,5 @@
 - The problems are separated into the topics above.  
 - Started 2020-07-18.
 - https://cses.fi/problemset/  
+## Ownership
+- All files in this repository were made by me.
