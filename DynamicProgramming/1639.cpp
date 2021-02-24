@@ -14,10 +14,7 @@ int main() {
         dp[0][i] = i;
     for (int i = 1; i <= c; i++) {
         for (int q = 1; q <= d; q++) {
-            dp[i][q] = max(abs(i-q),min(dp[i-1][q-1],min(dp[i-1][q],dp[i][q-1])));
-            if (dp[i][q] == dp[i-1][q-1])
-                dp[i][q] -= a[i-1] == b[q-1];
-            dp[i][q]++;
+            dp[i][q] = min(dp[i-1][q-1]+1-(a[i-1]==b[q-1]),min(dp[i-1][q]+1,dp[i][q-1]+1));
         }
     }
     cout << dp[c][d] << "\n";
