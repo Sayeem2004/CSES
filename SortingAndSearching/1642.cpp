@@ -1,48 +1,46 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define int64 int64_t
+#define ll int64_t
+#define arr array
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
     int n, x; cin >> n >> x;
-    vector<int> v(n);
+    vector<int> V(n);
     for (int i = 0; i < n; i++)
-        cin >> v[i];
-    vector<pair<int,int>> p(n*(n-1)/2);
-    vector<pair<int,int>> ind(n*(n-1)/2);
+        cin >> V[i];
+    vector<arr<int,2>> S;
+    map<arr<int,2>,arr<int,2>> P;
     int t = 0;
     for (int i = 0; i < n-1; i++) {
         for (int q = i+1; q < n; q++) {
-            p[t] = make_pair(v[i]+v[q],t);
-            ind[t] = make_pair(i,q);
+            S.push_back({V[i]+V[q], t});
+            P[{V[i]+V[q], t}] = {i,q};
             t++;
         }
     }
-    sort(p.begin(),p.end());
-    int i = 0, j = p.size()-1;
-    bool br = true;
+    sort(S.begin(),S.end());
+    int i = 0, j = S.size()-1;
     while (i < j) {
-        if (p[i].first+p[j].first < x) {
-            i++;
-        } else if (p[i].first+p[j].first > x) {
-            j--;
-        } else {
-            set<int64> s;
-            s.insert(ind[p[i].second].first);
-            s.insert(ind[p[i].second].second);
-            s.insert(ind[p[j].second].first);
-            s.insert(ind[p[j].second].second);
-            if (s.size() == 4) {
-                cout << ind[p[i].second].first+1 << " ";
-                cout << ind[p[i].second].second+1 << " ";
-                cout << ind[p[j].second].first+1 << " ";
-                cout << ind[p[j].second].second+1 << "\n";
-                br = false; break;
-            } else {
-                i++;
-            }
+        if (S[i][0]+S[j][0] < x) i++;
+        else if (S[i][0]+S[j][0] > x) j--;
+        else {
+            set<int> T;
+            T.insert(P[S[i]][0]);
+            T.insert(P[S[i]][1]);
+            T.insert(P[S[j]][0]);
+            T.insert(P[S[j]][1]);
+            if (T.size() == 4) {
+                cout << P[S[i]][0]+1 << " ";
+                cout << P[S[i]][1]+1 << " ";
+                cout << P[S[j]][0]+1 << " ";
+                cout << P[S[j]][1]+1 << "\n";
+                return 0;
+            } else if (S[i+1][0] == S[i][0]) i++;
+            else if (S[j-1][0] == S[j][0]) j--;
+            else i++;
         }
     }
-    if (br) cout << "IMPOSSIBLE" << "\n";
+    cout << "IMPOSSIBLE\n";
 }

@@ -2,70 +2,36 @@
 using namespace std;
 #define ll int64_t
 
+ll check(ll mx, ll m, vector<ll> V) {
+    if (mx > m) return 1e18;
+    ll cnt = 1, curr = 0;
+    for (int i = 0; i < V.size(); i++) {
+        if (curr + V[i] > m) {
+            curr = V[i];
+            cnt++;
+        } else curr += V[i];
+    }
+    return cnt;
+}
+
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
     ll n, k; cin >> n >> k;
-    vector<ll> v(n);
-    ll mx = 0, sum = 0;
+    vector<ll> V(n);
+    ll mx = 0;
     for (int i = 0; i < n; i++) {
-        ll x; cin >> x;
-        mx = max(x,mx);
-        sum += x;
-        v[i] = x;
+        cin >> V[i];
+        mx = max(V[i],mx);
     }
-    ll start = mx, end = 1e18, mid;
-    if (k == 1) {
-        cout << sum << "\n";
-        return 0;
+    ll l = 1, r = 1e18;
+    while (l < r) {
+        ll m = (l+r)/2;
+        ll cnt = check(mx, m, V);
+        if (cnt <= k) {
+            if (check(mx, m-1, V) <= k) r = m-1;
+            else r = m;
+        } else l = m+1;
     }
-    while (start <= end) {
-        mid = (start+end)/2;
-        ll count = 1, curr = 0;
-        for (int i = 0; i < n; i++) {
-            if (curr + v[i] > mid) {
-                curr = v[i];
-                count++;
-            } else {
-                curr += v[i];
-            }
-        }
-        if(count <= k) {
-            end = mid-1;
-        } else {
-            start = mid+1;
-        }
-    }
-    ll ans = mid, count, curr;
-    count = 1, curr = 0;
-    for (int i = 0; i < n; i++) {
-        if (curr + v[i] > mid+1) {
-            curr = v[i];
-            count++;
-        } else {
-            curr += v[i];
-        }
-    }
-    if (count == k && mx <= mid+1) ans = mid+1;
-    count = 1, curr = 0;
-    for (int i = 0; i < n; i++) {
-        if (curr + v[i] > mid) {
-            curr = v[i];
-            count++;
-        } else {
-            curr += v[i];
-        }
-    }
-    if (count == k && mx <= mid) ans = mid;
-    count = 1, curr = 0;
-    for (int i = 0; i < n; i++) {
-        if (curr + v[i] > mid-1) {
-            curr = v[i];
-            count++;
-        } else {
-            curr += v[i];
-        }
-    }
-    if (count == k && mx <= mid-1) ans = mid-1;
-    cout << ans << "\n";
+    cout << (l+r)/2 << "\n";
 }
