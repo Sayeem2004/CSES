@@ -7,11 +7,6 @@ int main() {
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
     ll n, m; cin >> n >> m;
-    if (n == 1 || m == 1) {
-        cout << "YES\n";
-        cout << 0 << "\n";
-        return 0;
-    }
     vector<vector<bool>> C(n,vector<bool>(m));
     arr<ll,2> person;
     vector<arr<ll,2>> monsters;
@@ -79,6 +74,11 @@ int main() {
         }
     }
     for (auto e : exits) {
+        if (e[0] == person[0] && e[1] == person[1]) {
+            cout << "YES" << "\n";
+            cout << 0 << "\n";
+            return 0;
+        }
         arr<ll,2> prev = P[e[0]][e[1]];
         if (abs(prev[0]-e[0]) + abs(prev[1]-e[1]) != 1) continue;
         else {
