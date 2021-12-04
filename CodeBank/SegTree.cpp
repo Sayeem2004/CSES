@@ -3,11 +3,9 @@ using namespace std;
 #define ll int64_t
 
 template<class T> struct Seg {
-    const T ID = 0; int n; vector<T> seg;
+    const T ID = 1e18; int n; vector<T> seg;
 
     T comb(T a, T b) {
-        if (a == ID) return b;
-        if (b == ID) return a;
         return min(a,b);
     }
 
