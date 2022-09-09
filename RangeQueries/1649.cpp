@@ -1,43 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll int64_t
-int n;  // array size
-int t[400000];
 
-void build() {  // build the tree
-    for (int i = n - 1; i > 0; --i)
-        t[i] = min(t[i<<1],t[i<<1|1]);
-}
+template<class T> struct seg_tree {
+    // Variable declarations
+    vector<T> SEG; long long N; T DEF = (T) NULL;
 
-void update(int p, int value) {  // update value at position p
-    for (t[p += n] = value; p > 1; p >>= 1)
-        t[p>>1] = min(t[p],t[p^1]);
-}
+    // Combination operation
+    T combine(T a, T b) { return min(a, b); }
 
-int get(int l, int r) {  // get on interval [l, r)
-    int res = 1e9;
-    for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-        if (l&1) res = min(res,t[l++]);
-        if (r&1) res = min(res,t[--r]);
+    // Constructors
+    seg_tree(long long n) { N = n; SEG.assign(2 * n, (T) NULL); }
+    seg_tree(long long n, T def) { N = n; DEF = def; SEG.assign(2 * n, def); }
+
+    // Mutators
+    void pull(long long p) { SEG[p] = combine(SEG[2 * p], SEG[2 * p + 1]); }
+    void update(long long p, T val) {
+        if (p < 0 || p >= N) return;
+        SEG[p += N] = val;
+        for (p /= 2; p; p /= 2) pull(p);
     }
-    return res;
-}
+
+    // Accessors
+    T get(long long p) { return (p < 0 || p >= N ? (T) NULL : SEG[p + N]); }
+    T query(long long l, long long r) { // [l, r]
+        if (l < 0 || r < 0 || l >= N || r >= N) return (T) NULL;
+        T ra = DEF, rb = DEF;
+        for (l += N, r += N+1; l < r; l /= 2, r /= 2) {
+            if (l & 1) ra = combine(ra, SEG[l++]);
+            if (r & 1) rb = combine(SEG[--r], rb);
+        }
+        return combine(ra, rb);
+    }
+};
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
-    int q; cin >> n >> q;
-    for (int i = 0; i < n; i++)
-        cin >> t[n+i];
-    build();
+    long long n, q; cin >> n >> q;
+    seg_tree<long long> ST(n, 1000000000);
+    for (int i = 0; i < n; i++) {
+        long long x; cin >> x;
+        ST.update(i, x);
+    }
     for (int i = 0; i < q; i++) {
-        int x; cin >> x;
-        if (x == 2) {
-            int y, z; cin >> y >> z;
-            cout << get(y-1,z) << "\n";
-        } else {
-            int y, z; cin >> y >> z;
-            update(y-1,z);
-        }
+        long long t, a, b; cin >> t >> a >> b;
+        if (t == 1) ST.update(--a, b);
+        else cout << ST.query(--a, --b) << '\n';
     }
 }

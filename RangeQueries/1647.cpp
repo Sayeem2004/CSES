@@ -1,53 +1,49 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll int64_t
 
-ll getMid(ll s, ll e) {
-    return s + (e-s)/2;
-}
-ll constructSTUtil(ll arr[], ll ss, ll se, ll *st, ll si) {
-    if (ss == se) {
-        st[si] = arr[ss];
-        return arr[ss];
-    }
-    ll mid = getMid(ss,se);
-    st[si] = min(constructSTUtil(arr,ss,mid,st,si*2+1),constructSTUtil(arr,mid+1,se,st,si*2+2));
-    return st[si];
-}
-ll *constructST(ll arr[], ll n) {
-    ll x = (ll)(ceil(log2(n)));
-    ll max_size = 2*(ll)pow(2, x) - 1;
-    ll *st = new ll[max_size];
-    constructSTUtil(arr, 0, n-1, st, 0);
-    return st;
-}
+template<class T> struct seg_tree {
+    // Variable declarations
+    vector<T> SEG; long long N; T DEF = (T) NULL;
 
-ll getValueUtil(ll *st, ll ss, ll se, ll qs, ll qe, ll si) {
-    if (qs <= ss && qe >= se)
-        return st[si];
-    if (se < qs || ss > qe)
-        return 1e18;
-    ll mid = getMid(ss,se);
-    return min(getValueUtil(st,ss,mid,qs,qe,2*si+1),getValueUtil(st,mid+1,se,qs,qe,2*si+2));
-}
-ll getValue(ll *st, ll n, ll qs, ll qe) {
-    if (qs < 0 || qe > n-1 || qs > qe) {
-        cout<<"Invalid Input";
-        return -1;
+    // Combination operation
+    T combine(T a, T b) { return min(a, b); }
+
+    // Constructors
+    seg_tree(long long n) { N = n; SEG.assign(2 * n, (T) NULL); }
+    seg_tree(long long n, T def) { N = n; DEF = def; SEG.assign(2 * n, def); }
+
+    // Mutators
+    void pull(long long p) { SEG[p] = combine(SEG[2 * p], SEG[2 * p + 1]); }
+    void update(long long p, T val) {
+        if (p < 0 || p >= N) return;
+        SEG[p += N] = val;
+        for (p /= 2; p; p /= 2) pull(p);
     }
-    return getValueUtil(st,0,n-1,qs,qe,0);
-}
+
+    // Accessors
+    T get(long long p) { return (p < 0 || p >= N ? (T) NULL : SEG[p + N]); }
+    T query(long long l, long long r) { // [l, r]
+        if (l < 0 || r < 0 || l >= N || r >= N) return (T) NULL;
+        T ra = DEF, rb = DEF;
+        for (l += N, r += N+1; l < r; l /= 2, r /= 2) {
+            if (l & 1) ra = combine(ra, SEG[l++]);
+            if (r & 1) rb = combine(SEG[--r], rb);
+        }
+        return combine(ra, rb);
+    }
+};
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0); cout.tie(0);
-    int n, q; cin >> n >> q;
-    ll v[n];
-    for (int i = 0; i < n; i++)
-        cin >> v[i];
-    ll *st = constructST(v,n);
+    long long n, q; cin >> n >> q;
+    seg_tree<long long> ST(n, 1000000000);
+    for (int i = 0; i < n; i++) {
+        long long x; cin >> x;
+        ST.update(i, x);
+    }
     for (int i = 0; i < q; i++) {
-		ll x, y; cin >> x >> y;
-        cout << getValue(st,n,x-1,y-1) << "\n";
+        long long l, r; cin >> l >> r;
+        cout << ST.query(l-1, r-1) << '\n';
     }
 }

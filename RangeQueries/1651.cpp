@@ -1,83 +1,58 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll int64_t
 
-ll getMid(ll s, ll e) {
-	return s + (e-s)/2;
-}
-ll constructSTUtil(ll arr[], ll ss, ll se, ll *st, ll si) {
-	if (ss == se) {
-		st[si] = arr[ss];
-		return arr[ss];
-	}
-	ll mid = getMid(ss,se);
-	st[si] = constructSTUtil(arr,ss,mid,st,si*2+1) + constructSTUtil(arr,mid+1,se,st,si*2+2);
-	return st[si];
-}
-ll *constructST(ll arr[], ll n) {
-	ll x = (ll)(ceil(log2(n)));
-	ll max_size = 2*(ll)pow(2, x) - 1;
-	ll *st = new ll[max_size];
-	constructSTUtil(arr, 0, n-1, st, 0);
-	return st;
-}
+template<class T> struct seg_tree {
+    // Variable declarations
+    vector<T> SEG; long long N; T DEF = (T) NULL;
 
-void updateValueUtil(ll *st, ll ss, ll se, ll i, ll diff, ll si) {
-	if (i < ss || i > se)
-		return;
-	st[si] = st[si] + diff;
-	if (se != ss) {
-		ll mid = getMid(ss,se);
-		updateValueUtil(st,ss,mid,i,diff,2*si+1);
-		updateValueUtil(st,mid+1,se,i,diff,2*si+2);
-	}
-}
-void updateValue(ll arr[], ll *st, ll n, ll i, ll new_val) {
-	if (i < 0 || i > n-1) {
-		cout<<"Invalid Input";
-		return;
-	}
-	ll diff = new_val;
-	arr[i] += new_val;
-	updateValueUtil(st,0,n-1,i,diff,0);
-}
+    // Combination operation
+    T combine(T a, T b) { return a + b; }
 
-ll getSumUtil(ll *st, ll ss, ll se, ll qs, ll qe, ll si) {
-	if (qs <= ss && qe >= se)
-		return st[si];
-	if (se < qs || ss > qe)
-		return 0;
-	ll mid = getMid(ss,se);
-	return getSumUtil(st,ss,mid,qs,qe,2*si+1) + getSumUtil(st,mid+1,se,qs,qe,2*si+2);
-}
-ll getSum(ll *st, ll n, ll qs, ll qe) {
-	if (qs < 0 || qe > n-1 || qs > qe) {
-		cout<<"Invalid Input";
-		return -1;
-	}
-	return getSumUtil(st,0,n-1,qs,qe,0);
-}
+    // Constructors
+    seg_tree(long long n) { N = n; SEG.assign(2 * N, DEF); }
+    seg_tree(long long n, T def) { N = n; DEF = def; SEG.assign(2 * N, DEF); }
+
+    // Mutators
+    void pull(long long p) { SEG[p] = combine(SEG[2 * p], SEG[2 * p + 1]); }
+    void update(long long p, T val) {
+        if (p < 0 || p >= N) return;
+        SEG[p += N] = val;
+        for (p /= 2; p; p /= 2) pull(p);
+    }
+
+    // Accessors
+    T get(long long p) { return (p < 0 || p >= N ? DEF : SEG[p + N]); }
+    void print() { for (long long i = 1; i < 2 * N; i++) cout << SEG[i] << " \n"[i == 2*N-1]; }
+    T query(long long l, long long r) { // [l, r]
+        if (l < 0 || r < 0 || l >= N || r >= N) return DEF;
+        T ra = DEF, rb = DEF;
+        for (l += N, r += N+1; l < r; l /= 2, r /= 2) {
+            if (l & 1) ra = combine(ra, SEG[l++]);
+            if (r & 1) rb = combine(SEG[--r], rb);
+        }
+        return combine(ra, rb);
+    }
+};
 
 int main() {
-	ll n, q; cin >> n >> q;
-	ll v[n];
-	for (int i = 0; i < n; i++)
-		cin >> v[i];
-    ll dif[n-1];
-    dif[0] = 0;
-    for (int i = 1; i < n; i++)
-        dif[i] = v[i]-v[i-1];
-	ll *st = constructST(dif,n);
-	for (int i = 0; i < q; i++) {
-		ll x; cin >> x;
-		if (x == 2) {
-            ll y; cin >> y;
-			cout << v[0] + getSum(st,n,0,y-1) << "\n";
-		} else {
-            ll w, y, z; cin >> w >> y >> z;
-			updateValue(dif,st,n,w-1,z);
-            if (y != n)
-                updateValue(dif,st,n,y,-z);
-		}
-	}
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    long long n, q; cin >> n >> q;
+    seg_tree<long long> ST(n, 0);
+    for (int i = 0; i < n; i++) {
+        long long x; cin >> x;
+        if (i == 0) ST.update(i, x);
+        else ST.update(i, x-ST.query(0, i-1));
+    }
+    for (int i = 0; i < q; i++) {
+        long long t; cin >> t;
+        if (t == 1) {
+            long long l, r, u; cin >> l >> r >> u;
+            ST.update(l-1, ST.get(l-1) + u);
+            ST.update(r, ST.get(r) - u);
+        } else {
+            long long k; cin >> k;
+            cout << ST.query(0, k-1) << "\n";
+        }
+    }
 }
