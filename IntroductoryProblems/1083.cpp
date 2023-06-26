@@ -1,18 +1,17 @@
-#include <iostream>
-#define ll long long
-
-using namespace std;
+#include <bits/stdc++.h>
 
 int main() {
-  ll n;
-  cin >> n;
-  ll sum = 0;
-  for(int i = 1; i < n; i++) {
-    ll a;
-    cin >> a;
-    sum += a;
-  }
-  ll out = (n + 1) * n / 2;
-  out -= sum;
-  cout << out;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N; std::cin >> N;
+
+    long long sm = 0;
+    for (int i = 0; i < N-1; i++) {
+        int x; std::cin >> x;
+        sm += x;
+    }
+
+    std::cout << N * (N+1) / 2 - sm << '\n';
 }

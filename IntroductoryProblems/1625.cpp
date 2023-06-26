@@ -1,42 +1,39 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll long long
 
 const int N = 7;
 bool V[N+2][N+2];
-const int Dx[] = {1, -1, 0, 0}, Dy[] = {0, 0, 1, -1};
+const int DR[] = {1, -1, 0, 0}, DC[] = {0, 0, 1, -1};
 
-int solve(string& s, int itr, int x, int y) {
-    if (x == N && y == 1) return (itr == N*N-1);
-    if (itr == N*N-1) return 0;
+int solve(int p, int r, int c, std::string &S) {
+    if (r == N && c == 1) return p == N*N-1;
+    if (p == N*N-1) return 0;
 
-    if (((V[x][y+1] && V[x][y-1]) && (!V[x-1][y] && !V[x+1][y])) ||
-        ((V[x+1][y] && V[x-1][y]) && (!V[x][y-1] && !V[x][y+1]))) return 0;
+    if (V[r-1][c] && V[r+1][c] && !V[r][c-1] && !V[r][c+1]) return 0;
+    if (!V[r-1][c] && !V[r+1][c] && V[r][c-1] && V[r][c+1]) return 0;
 
-    V[x][y] = 1;
-    int res = 0;
+    V[r][c] = 1;
+    int ans = 0;
+
     for (int i = 0; i < 4; i++) {
-        if (s[itr] == 'D' && i != 0) continue;
-        if (s[itr] == 'U' && i != 1) continue;
-        if (s[itr] == 'R' && i != 2) continue;
-        if (s[itr] == 'L' && i != 3) continue;
-        int nx = x+Dx[i], ny = y+Dy[i];
-        if (nx >= 1 && nx <= N && ny >= 1 && ny <= N && !V[nx][ny])
-            res += solve(s, itr+1, nx, ny);
+        if (S[p] == 'D' && i != 0) continue;
+        if (S[p] == 'U' && i != 1) continue;
+        if (S[p] == 'R' && i != 2) continue;
+        if (S[p] == 'L' && i != 3) continue;
+
+        int nr = r + DR[i], nc = c + DC[i];
+        if (!V[nr][nc]) ans += solve(p+1, nr, nc, S);
     }
-    V[x][y] = 0;
-    return res;
+
+    V[r][c] = 0;
+    return ans;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    string s; cin >> s;
-    for (int i = 0; i <= N+1; i++) {
-        for (int q = 0; q <= N+1; q++) {
-            if (i == 0 || q == 0 || i == N+1 || q == N+1)
-                V[i][q] = 1;
-        }
-    }
-    cout << solve(s, 0, 1, 1) << "\n";
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    std::string S; std::cin >> S;
+    for (int i = 0; i < N+2; i++) V[0][i] = V[N+1][i] = V[i][0] = V[i][N+1] = 1;
+    std::cout << solve(0, 1, 1, S) << "\n";
 }

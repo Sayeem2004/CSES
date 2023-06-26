@@ -1,15 +1,17 @@
-#include <iostream>
-#include <math.h>
-#define ll long long
-
-using namespace std;
+#include <bits/stdc++.h>
 
 int main() {
-  ll n;
-  cin >> n;
-  int sum = 0;
-  for(int i = 1; i < 100; i++) {
-    sum += floor(n / pow(5,i));
-  }
-  cout << sum;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N; std::cin >> N;
+
+    long long ans = 0, curr = 5;
+    while (curr <= N) {
+        ans += N / curr;
+        curr *= 5;
+    }
+
+    std::cout << ans << '\n';
 }

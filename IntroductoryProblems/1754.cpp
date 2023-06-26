@@ -1,21 +1,15 @@
-#include <iostream>
-
-using namespace std;
+#include <bits/stdc++.h>
 
 int main() {
-  int n;
-  cin >> n;
-  for (int i = 0; i < n; i++) {
-    int a, b;
-    cin >> a >> b;
-    if (a < b / 2 || b < a / 2) {
-      cout << "NO" << endl;
-    } else {
-      if ((a + b) % 3 == 0) {
-        cout << "YES" << endl;
-      } else {
-        cout << "NO" << endl;
-      }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int T; std::cin >> T; while (T--) {
+        int A, B; std::cin >> A >> B;
+
+        if (A > 2 * B || B > 2 * A) std::cout << "NO\n";
+        else if ((A + B) % 3 == 0) std::cout << "YES\n";
+        else std::cout << "NO\n";
     }
-  }
 }

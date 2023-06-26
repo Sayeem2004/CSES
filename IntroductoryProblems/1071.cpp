@@ -1,34 +1,26 @@
-#include <iostream>
-#define ll long long
-
-using namespace std;
+#include <bits/stdc++.h>
 
 int main() {
-  int t;
-  cin >> t;
-  for (int i = 0; i < t; i++) {
-    ll row, col;
-    cin >> row >> col;
-    ll num = 0;
-    if (row > col) {
-      if (row % 2 == 0) {
-        num = row * row - col + 1;
-      } else {
-        num = (row - 1) * (row - 1) + col;
-      }
-    } else if (col > row) {
-      if (col % 2 == 1) {
-        num = col * col - row + 1;
-      } else {
-        num = (col - 1) * (col - 1) + row;
-      }
-    } else {
-      if (row % 2 == 0) {
-        num = row * row - col + 1;
-      } else {
-        num = col * col - row + 1;
-      }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int T; std::cin >> T; while (T--) {
+        long long R, C; std::cin >> R >> C;
+        long long val = 0;
+
+        if (R > C) {
+            val = R * R - R + 1;
+
+            if (R % 2 == 0) val += R - C;
+            else val -= R - C;
+        } else {
+            val = C * C - C + 1;
+
+            if (C % 2 == 0) val -= C - R;
+            else val += C - R;
+        }
+
+        std::cout << val << '\n';
     }
-    cout << num << endl;
-  }
 }

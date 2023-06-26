@@ -1,18 +1,14 @@
 #include <bits/stdc++.h>
-#define ll long long
-
-using namespace std;
 
 int main() {
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  int n;
-  cin >> n;
-  ll out = 1;
-  ll mod = pow(10, 9) + 7;
-  for (int i = 0; i < n; i++) {
-    out *= 2;
-    out %= mod;
-  }
-  cout << out << "\n";
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N; std::cin >> N;
+
+    long long ans = 1, mod = 1e9 + 7;
+    for (long long i = 1; i <= N; i++) ans = (ans * 2) % mod;
+
+    std::cout << ans << '\n';
 }

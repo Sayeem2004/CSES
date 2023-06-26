@@ -1,26 +1,20 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
-int countMoves(int n) {
-    if (n == 1) return 1;
-    return countMoves(n-1)*2+1;
-}
+void solve(int n, int s, int e) {
+    if (n == 0) return;
 
-void printMoves(int n, int s1, int s2) {
-    if (n == 1) {
-        cout << s1 << " " << s2 << "\n";
-    } else {
-        printMoves(n-1,s1,6-(s1+s2));
-        cout << s1 << " " << s2 << "\n";
-        printMoves(n-1,6-(s1+s2),s2);
-    }
+    solve(n - 1, s, 6 - s - e);
+    std::cout << s << " " << e << "\n";
+    solve(n - 1, 6 - s - e, e);
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    cout << countMoves(n) << "\n";
-    printMoves(n, 1, 3);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+
+    std::cout << (1 << N) - 1 << '\n';
+    solve(N, 1, 3);
 }
