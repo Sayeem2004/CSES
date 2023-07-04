@@ -13,5 +13,5 @@ int main() {
         else { ans = std::max(ans, cnt); cnt = 1; }
     }
 
-    std::cout << std::max(ans, cnt) << '\n';
+    std::cout << std::max(ans, cnt) << "\n";
 }

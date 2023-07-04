@@ -1,22 +1,24 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, a, b; cin >> n >> a >> b;
-    vector<ll> P(n+1);
-    for (int i = 1; i <= n; i++) {
-        cin >> P[i];
-        P[i] += P[i-1];
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N, A, B; std::cin >> N >> A >> B;
+
+    std::vector<long long> P(N+1, 0);
+    for (long long i = 1; i <= N; ++i) {
+        std::cin >> P[i]; P[i] += P[i-1];
     }
-    multiset<ll> MS;
-    ll ans = -1e18;
-    for(int i=a; i <= n; i++) {
-        if (i > b) MS.erase(MS.find(P[i-b-1]));
-        MS.insert(P[i-a]);
-        ans = max(ans, P[i]-*(MS.begin()));
+
+    long long ans = -1e18;
+    std::multiset<long long> MS;
+    for (int i = A; i <= N; i++) {
+        if (i > B) MS.erase(MS.find(P[i-B-1]));
+        MS.insert(P[i-A]);
+        ans = std::max(ans, P[i] - *MS.begin());
     }
-    cout << ans << "\n";
+
+    std::cout << ans << "\n";
 }

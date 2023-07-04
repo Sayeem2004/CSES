@@ -17,7 +17,7 @@ int main() {
         return 0;
     }
 
-    for (int i = 2; i <= N; i += 2) std::cout << i << ' ';
-    for (int i = 1; i <= N; i += 2) std::cout << i << ' ';
-    std::cout << '\n';
+    for (int i = 2; i <= N; i += 2) std::cout << i << " ";
+    for (int i = 1; i <= N; i += 2) std::cout << i << " ";
+    std::cout << "\n";
 }

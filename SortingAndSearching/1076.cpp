@@ -1,29 +1,33 @@
 #include <bits/stdc++.h>
+
 #include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 
-using namespace std;
-using namespace __gnu_pbds;
-
-typedef tree<int, null_type,
-             less_equal<int>, rb_tree_tag,
-             tree_order_statistics_node_update>
-    Ordered_set;
+template <typename T> using ordered_set = __gnu_pbds::tree<
+    T, __gnu_pbds::null_type, std::less<T>, __gnu_pbds::rb_tree_tag,
+    __gnu_pbds::tree_order_statistics_node_update // find_by_order, order_of_key
+>;
 
 int main() {
-    int n, k; cin >> n >> k;
-    int arr[n];
-    for (int i = 0; i < n; i++)
-        cin >> arr[i];
-    Ordered_set s;
-    for (int i = 0; i < k; i++)
-        s.insert(arr[i]);
-    int ans = *s.find_by_order(k/2+k%2-1);
-    cout << ans << " ";
-    for (int i = 0; i < n - k; i++) {
-        s.erase(s.find_by_order(s.order_of_key(arr[i])));
-        s.insert(arr[i+k]);
-        ans = *s.find_by_order(k/2+k%2-1);
-        cout << ans << " ";
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, K; std::cin >> N >> K;
+    std::vector<std::pair<int, int>> V(N);
+    for (int i = 0; i < N; i++) {
+        std::cin >> V[i].first;
+        V[i].second = i;
     }
-    cout << "\n";
+
+    ordered_set<std::pair<int, int>> S;
+    for (int i = 0; i < N; i++) {
+        S.insert(V[i]);
+        if (i < K-1) continue;
+        if (i > K-1) S.erase(S.find(V[i - K]));
+
+        std::cout << (*S.find_by_order((K - 1) / 2)).first << " ";
+    }
+
+    std::cout << "\n";
 }

@@ -13,5 +13,5 @@ int main() {
         curr *= 5;
     }
 
-    std::cout << ans << '\n';
+    std::cout << ans << "\n";
 }

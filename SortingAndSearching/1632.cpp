@@ -1,28 +1,30 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, k; cin >> n >> k;
-    vector<arr<int,2>> V(n);
-    for (int i = 0; i < n; i++)
-        cin >> V[i][1] >> V[i][0];
-    sort(V.begin(),V.end());
-    multiset<int> P;
-    for (int i = 0; i < k; i++)
-        P.insert(0);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, K; std::cin >> N >> K;
+
+    std::vector<std::pair<int, int>> V(N);
+    for (std::pair<int, int> &v : V) std::cin >> v.first >> v.second;
+    std::sort(V.begin(), V.end(), [](std::pair<int, int> &a, std::pair<int, int> &b) {
+        if (a.second == b.second) return a.first < b.first;
+        return a.second < b.second;
+    });
+
+    std::multiset<int> MS;
+    for (int i = 0; i < K; i++) MS.insert(0);
+
     int ans = 0;
-    for (int i = 0; i < n; i++) {
-        auto itr = P.lower_bound(V[i][1]+1);
-        if (itr != P.begin()) itr--;
-        if (*itr <= V[i][1]) {
-            ans++;
-            P.erase(itr);
-            P.insert(V[i][0]);
-        }
+    for (int i = 0; i < N; i++) {
+        std::multiset<int>::iterator it = MS.upper_bound(V[i].first);
+        if (it == MS.begin()) continue;
+        else it--;
+
+        MS.erase(it); MS.insert(V[i].second); ans++;
     }
-    cout << ans << "\n";
+
+    std::cout << ans << "\n";
 }

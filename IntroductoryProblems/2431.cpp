@@ -27,6 +27,6 @@ int main() {
         std::string num = std::to_string(val + 1);
         long long cnt = count(val + 1) - K;
 
-        std::cout << num[num.size() - cnt - 1] << '\n';
+        std::cout << num[num.size() - cnt - 1] << "\n";
     }
 }

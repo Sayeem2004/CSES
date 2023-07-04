@@ -21,6 +21,6 @@ int main() {
             else val += C - R;
         }
 
-        std::cout << val << '\n';
+        std::cout << val << "\n";
     }
 }

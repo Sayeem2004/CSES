@@ -15,6 +15,6 @@ int main() {
 
     int N; std::cin >> N;
 
-    std::cout << (1 << N) - 1 << '\n';
+    std::cout << (1 << N) - 1 << "\n";
     solve(N, 1, 3);
 }

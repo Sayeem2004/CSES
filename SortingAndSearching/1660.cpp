@@ -1,22 +1,20 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n, sum; cin >> n >> sum;
-    vector<ll> v(n);
-    for (int i = 0; i < n; i++)
-        cin >> v[i];
-    set<ll> s;
-    ll curr = 0, ans = 0;
-    for (int i = 0; i < n; i++) {
-        curr += v[i];
-        if (curr == sum) ans++;
-        ans += s.count(curr-sum);
-        s.insert(curr);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N, X; std::cin >> N >> X;
+    std::map<long long, long long> M;
+    long long ans = 0, sum = 0;
+    M[0] = 1;
+
+    for (long long i = 0; i < N; ++i) {
+        long long a; std::cin >> a;
+        sum += a; ans += M[sum - X];
+        M[sum]++;
     }
-    cout << ans << "\n";
+
+    std::cout << ans << "\n";
 }

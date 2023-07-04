@@ -11,6 +11,6 @@ int main() {
         long long total = (i * i) * (i * i - 1) / 2;
         long long check = (i - 1) * (i - 2) * 2;
 
-        std::cout << total - 2 * check << '\n';
+        std::cout << total - 2 * check << "\n";
     }
 }

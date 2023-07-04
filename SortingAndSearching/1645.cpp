@@ -1,22 +1,23 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define int64 int64_t
-
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    vector<int> v(n);
-    stack<pair<int,int>> s;
-    for (int i = 0; i < n; i++)
-        cin >> v[i];
-    for (int i = 0; i < n; i++) {
-        while (!s.empty() && s.top().first >= v[i])
-            s.pop();
-        if (s.empty()) cout << 0 << " ";
-        else cout << s.top().second+1 << " ";
-        s.push(make_pair(v[i],i));
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+    std::vector<int> V(N);
+    for (int &v : V) std::cin >> v;
+
+    std::stack<int> S;
+    for (int i = 0; i < N; i++) {
+        while (!S.empty() && V[S.top()] >= V[i]) S.pop();
+
+        if (S.empty()) std::cout << "0 ";
+        else std::cout << S.top() + 1 << " ";
+
+        S.push(i);
     }
-    cout << "\n";
+
+    std::cout << "\n";
 }

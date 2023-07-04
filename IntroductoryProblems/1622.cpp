@@ -38,9 +38,9 @@ int main() {
     int ans = CC.fct(N);
     for (std::pair<char, int> P : M) ans = (ans * CC.ift(P.second)) % CC.MOD;
 
-    std::cout << ans << '\n';
+    std::cout << ans << "\n";
     sort(S.begin(), S.end());
 
-    do std::cout << S << '\n';
+    do std::cout << S << "\n";
     while (next_permutation(S.begin(), S.end()));
 }

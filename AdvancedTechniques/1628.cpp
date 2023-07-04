@@ -1,34 +1,45 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
-vector<ll> subset(vector<ll> a) {
-    vector<ll> s;
-    for (int b = 0; b < (1<<a.size()); b++) {
-        ll sum = 0;
-        for (int i = 0; i < a.size(); i++) {
-            if (b&(1<<i)) sum += a[i];
+std::vector<long long> subset(std::vector<long long> &V) {
+    int N = V.size();
+    std::vector<long long> RET;
+
+    for (int i = 0; i < (1<<N); i++) {
+        long long sum = 0;
+        for (int q = 0; q < N; q++) {
+            if (i & (1<<q)) sum += V[q];
         }
-        s.push_back(sum);
+        RET.push_back(sum);
     }
-    return s;
+
+    return RET;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, sum; cin >> n >> sum;
-    vector<ll> A1(n/2), A2(n-n/2);
-    for (int i = 0; i < n/2; i++) cin >> A1[i];
-    for (int i = 0; i < n-n/2; i++) cin >> A2[i];
-    vector<ll> S1 = subset(A1);
-    vector<ll> S2 = subset(A2);
-    ll ans = 0;
-    sort(S2.begin(),S2.end());
-    for (auto x : S1) {
-        auto itr1 = upper_bound(S2.begin(),S2.end(),sum-x);
-        auto itr2 = lower_bound(S2.begin(),S2.end(),sum-x);
-        ans += itr1-itr2;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, X; std::cin >> N >> X;
+
+    std::vector<long long> V(N);
+    for (long long& v : V) std::cin >> v;
+    std::sort(V.begin(), V.end());
+
+    std::vector<long long> A(N/2), B(N-N/2);
+    for (int i = 0; i < N/2; i++) A[i] = V[i];
+    for (int i = N/2; i < N; i++) B[i-N/2] = V[i];
+
+    std::vector<long long> SA = subset(A);
+    std::vector<long long> SB = subset(B);
+    std::sort(SB.begin(), SB.end());
+
+    long long ans = 0;
+    for (long long sa : SA) {
+        std::vector<long long>::iterator it1 = std::lower_bound(SB.begin(), SB.end(), X-sa);
+        std::vector<long long>::iterator it2 = std::upper_bound(SB.begin(), SB.end(), X-sa);
+        ans += it2 - it1;
     }
-    cout << ans << '\n';
+
+    std::cout << ans << "\n";
 }

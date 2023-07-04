@@ -1,19 +1,23 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    vector<int> V(n), POS(n);
-    for (int i = 0; i < n; i++) {
-        cin >> V[i];
-        POS[V[i]-1] = i;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+
+    std::unordered_map<int, int> M;
+    for (int i = 0; i < N; i++) {
+        int x; std::cin >> x;
+        M[x] = i;
     }
-    int ans = 1;
-    for (int i = 0; i < n-1; i++) {
-        if (POS[i] > POS[i+1]) ans++;
+
+    int ans = 1, curr = 2;
+    while (curr <= N) {
+        if (M[curr] < M[curr - 1]) ans++;
+        curr++;
     }
-    cout << ans << "\n";
+
+    std::cout << ans << "\n";
 }

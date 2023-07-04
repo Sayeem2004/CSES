@@ -16,5 +16,5 @@ int main() {
         V[i] = std::max(V[i], V[i-1]);
     }
 
-    std::cout << ans << '\n';
+    std::cout << ans << "\n";
 }

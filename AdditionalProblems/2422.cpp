@@ -1,23 +1,20 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-
-bool check(ll m, ll n) {
-    ll ans = 0;
-    for (ll i = 1; i <= n; i++)
-        ans += min(n,m/i);
-    return (ans >= (n*n+1)/2);
-}
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n; cin >> n;
-    ll l = 1, r = n*n;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N; std::cin >> N;
+
+    long long l = 0, r = 1e18;
     while (l < r) {
-        ll m = (l+r)/2;
-        if (check(m, n)) r = m;
-        else l = m+1;
+        long long m = (l + r) / 2, sm = 0;
+        for (long long i = 1; i <= N; ++i) sm += std::min(N, m / i);
+
+        if (sm >= (N * N + 1) / 2) r = m;
+        else l = m + 1;
     }
-    cout << (l+r)/2 << "\n";
+
+    std::cout << (l + r) / 2 << "\n";
 }

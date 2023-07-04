@@ -19,5 +19,5 @@ int main() {
     std::vector<long long> V(N);
     for (long long &v : V) std::cin >> v;
 
-    std::cout << solve(0, 0, 0, V) << '\n';
+    std::cout << solve(0, 0, 0, V) << "\n";
 }

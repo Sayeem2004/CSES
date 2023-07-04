@@ -15,10 +15,10 @@ int solve(int p, int r, int c, std::string &S) {
     int ans = 0;
 
     for (int i = 0; i < 4; i++) {
-        if (S[p] == 'D' && i != 0) continue;
-        if (S[p] == 'U' && i != 1) continue;
-        if (S[p] == 'R' && i != 2) continue;
-        if (S[p] == 'L' && i != 3) continue;
+        if (S[p] == "D" && i != 0) continue;
+        if (S[p] == "U" && i != 1) continue;
+        if (S[p] == "R" && i != 2) continue;
+        if (S[p] == "L" && i != 3) continue;
 
         int nr = r + DR[i], nc = c + DC[i];
         if (!V[nr][nc]) ans += solve(p+1, nr, nc, S);

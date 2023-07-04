@@ -1,23 +1,20 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n; cin >> n;
-    vector<ll> v(n);
-    for (ll i = 0; i < n; i++)
-        cin >> v[i];
-    map<ll,ll> m;
-    ll curr = 0, ans = 0;
-    for (ll i = 0; i < n; i++) {
-        curr += v[i];
-        ll x = (curr % n + n) % n;
-        if (x == 0) ans++;
-        ans += m[x];
-        m[x]++;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N; std::cin >> N;
+    std::map<long long, long long> M;
+    long long ans = 0, sum = 0;
+    M[0] = 1;
+
+    for (long long i = 0; i < N; ++i) {
+        long long a; std::cin >> a; sum += a;
+        long long mod = (sum % N + N) % N;
+        ans += M[mod]; M[mod]++;
     }
-    cout << ans << "\n";
+
+    std::cout << ans << "\n";
 }

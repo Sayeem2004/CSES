@@ -7,7 +7,7 @@ int solve(int r, std::vector<std::string> &BOARD, std::vector<bool> &COL,
 
     int ans = 0;
     for (int c = 0; c < 8; c++) {
-        if (BOARD[r][c] == '*') continue;
+        if (BOARD[r][c] == "*") continue;
         if (COL[c] || DIAG1[r+c] || DIAG2[r+7-c]) continue;
 
         COL[c] = DIAG1[r+c] = DIAG2[r+7-c] = true;
@@ -27,5 +27,5 @@ int main() {
     for (std::string &s : BOARD) std::cin >> s;
 
     std::vector<bool> COL(8, false), DIAG1(15, false), DIAG2(15, false);
-    std::cout << solve(0, BOARD, COL, DIAG1, DIAG2) << '\n';
+    std::cout << solve(0, BOARD, COL, DIAG1, DIAG2) << "\n";
 }

@@ -10,5 +10,5 @@ int main() {
     long long ans = 1, mod = 1e9 + 7;
     for (long long i = 1; i <= N; i++) ans = (ans * 2) % mod;
 
-    std::cout << ans << '\n';
+    std::cout << ans << "\n";
 }

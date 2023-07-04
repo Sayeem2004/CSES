@@ -1,28 +1,31 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-#define ordered_set tree<int, null_type,less<int>, rb_tree_tag,tree_order_statistics_node_update>
 
-// Set.find_by_order(index)
-// Set.find_by_key(number)
+template <typename T> using ordered_set = __gnu_pbds::tree<
+    T, __gnu_pbds::null_type, std::less<T>, __gnu_pbds::rb_tree_tag,
+    __gnu_pbds::tree_order_statistics_node_update // find_by_order, order_of_key
+>;
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    ordered_set S;
-    for (int i = 1; i <= n; i++) {
-        S.insert(i);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+
+    ordered_set<int> OS;
+    for (int i = 1; i <= N; i++) OS.insert(i);
+
+    int pos = 0;
+    while (!OS.empty()) {
+        pos = (pos + 1) % OS.size();
+        ordered_set<int>::iterator it = OS.find_by_order(pos);
+
+        std::cout << *it << " ";
+        OS.erase(it);
     }
-    int index = 0;
-    for (int i = 0; i < n; i++) {
-        index = ((index + 1) % S.size());
-        int c = *S.find_by_order(index);
-        cout << c << " ";
-        S.erase(c);
-    }
+
+    std::cout << "\n";
 }

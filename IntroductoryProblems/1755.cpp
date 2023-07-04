@@ -28,5 +28,5 @@ int main() {
     }
 
     if (cnt > 1) std::cout << "NO SOLUTION\n";
-    else std::cout << ans << '\n';
+    else std::cout << ans << "\n";
 }

@@ -8,15 +8,15 @@ int main() {
     int N; std::cin >> N;
 
     for (int i = 0; i < (1 << N); i++) {
-        std::string code(N, '0');
+        std::string code(N, "0");
 
         for (int q = 1; q <= N; q++) {
             int mod = 1 << (q + 1);
             int div = 1 << (q - 1);
 
-            if (i % mod >= div && i % mod < mod - div) code[N-q] = '1';
+            if (i % mod >= div && i % mod < mod - div) code[N-q] = "1";
         }
 
-        std::cout << code << '\n';
+        std::cout << code << "\n";
     }
 }

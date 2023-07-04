@@ -13,5 +13,5 @@ int main() {
         sm += x;
     }
 
-    std::cout << N * (N+1) / 2 - sm << '\n';
+    std::cout << N * (N+1) / 2 - sm << "\n";
 }

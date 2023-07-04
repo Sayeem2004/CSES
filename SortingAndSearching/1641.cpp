@@ -1,35 +1,37 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, x; cin >> n >> x;
-    vector<arr<int,2>> V(n);
-    for (int i = 0; i < n; i++) {
-        int a; cin >> a;
-        V[i] = {a, i};
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N, X; std::cin >> N >> X;
+
+    std::vector<std::pair<int, int>> V(N);
+    for (int i = 0; i < N; ++i) {
+        std::cin >> V[i].first;
+        V[i].second = i + 1;
     }
-    sort(V.begin(), V.end());
-    bool br = true;
-    for (int i = 0; i < n; i++) {
-        int a = i+1, b = n-1;
-        bool br2 = false;
-        while (a < b) {
-            if (V[a][0] + V[b][0] == x-V[i][0]) {
-                cout << V[i][1]+1 << " " << V[a][1]+1 << " " << V[b][1]+1 << "\n";
-                br = false; br2 = true; break;
-            }
-            if (V[a][0] + V[b][0] < x-V[i][0]) {
-                a++; continue;
-            }
-            if (V[a][0] + V[b][0] > x-V[i][0]) {
-                b--; continue;
-            }
+    std::sort(V.begin(), V.end());
+
+    for (int i = 0; i < N; i++) {
+        int l = i + 1, r = N - 1;
+        long long rem = X - V[i].first;
+        if (rem < 0) continue;
+
+        while (l < r) {
+            long long sum = V[l].first + V[r].first;
+
+            if (sum == rem) break;
+            else if (sum < rem) l++;
+            else r--;
         }
-        if (br2) break;
+
+        if (l < r && V[l].first + V[r].first == rem) {
+            std::cout << V[i].second << " " << V[l].second << " " << V[r].second << "\n";
+            return 0;
+        }
     }
-    if (br) cout << "IMPOSSIBLE\n";
+
+    std::cout << "IMPOSSIBLE\n";
 }

@@ -1,25 +1,27 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n, k; cin >> n >> k;
-    vector<ll> V(n);
-    for (int i = 0; i < n; i++)
-        cin >> V[i];
-    ll sm = 0, l = 0, r = 0;
-    map<ll,ll> M;
-    while (r < n) {
-        M[V[r]]++;
-        while (M.size() > k) {
-            M[V[l]]--;
-            if (M[V[l]] == 0) M.erase(V[l]);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, K; std::cin >> N >> K;
+    std::vector<int> V(N);
+    for (int &v : V) std::cin >> v;
+
+    std::map<int, int> M;
+    long long ans = 0, l = 0;
+
+    for (int i = 0; i < N; i++) {
+        M[V[i]]++;
+
+        while (M.size() > K && l <= i) {
+            if (--M[V[l]] == 0) M.erase(V[l]);
             l++;
         }
-        sm += r-l+1;
-        r++;
+
+        ans += i - l + 1;
     }
-    cout << sm << "\n";
+
+    std::cout << ans << "\n";
 }

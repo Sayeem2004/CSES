@@ -1,43 +1,40 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    vector<arr<int,2>> V(n);
-    vector<arr<int,3>> S(n);
-    for (int i = 0; i < n; i++) {
-        int a, b; cin >> a >> b;
-        V[i] = {a,b};
-        S[i] = {a,b,i};
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    typedef std::array<int, 3> node;
+    int N; std::cin >> N;
+
+    std::vector<node> V(N);
+    for (int i = 0; i < N; i++) {
+        std::cin >> V[i][0] >> V[i][1];
+        V[i][2] = i;
     }
-    sort(S.begin(),S.end());
-    map<arr<int,3>,int> P;
-    for (int i = 0; i < n; i++)
-        P[S[i]] = i;
-    int mx = 0, curr = 1;
-    vector<int> A(n);
-    A[0] = 1;
-    priority_queue<arr<int,2>> PQ;
-    PQ.push({-S[0][1], -curr});
-    for (int i = 1; i < n; i++) {
-        arr<int,2> room = PQ.top();
-        if (-room[0] < S[i][0]) {
-            PQ.pop();
-            PQ.push({-S[i][1], room[1]});
-            A[i] = -room[1];
+    std::sort(V.begin(), V.end());
+
+    int mn = 1;
+    std::vector<int> A(N);
+    std::priority_queue<node, std::vector<node>, std::greater<node>> PQ;
+
+    A[V[0][2]] = mn;
+    PQ.push({V[0][1], mn, 0});
+    for (int i = 1; i < N; i++) {
+        node curr = PQ.top();
+
+        if (V[i][0] > curr[0]) {
+            PQ.pop(); A[V[i][2]] = curr[1];
+            PQ.push({V[i][1], curr[1], i});
         } else {
-            curr++;
-            PQ.push({-S[i][1], -curr});
-            A[i] = curr;
+            mn++; A[V[i][2]] = mn;
+            PQ.push({V[i][1], mn, i});
         }
-        mx = max(mx, curr);
     }
-    cout << mx << "\n";
-    for (int i = 0; i < n; i++)
-        cout << A[P[{V[i][0],V[i][1],i}]] << " ";
-    cout << "\n";
+
+    std::cout << mn << "\n";
+    for (int i = 0; i < N; i++) {
+        std::cout << A[i] << " \n"[i == N - 1];
+    }
 }

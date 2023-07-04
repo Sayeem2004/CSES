@@ -1,24 +1,21 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n; cin >> n;
-    vector<ll> V(n);
-    for (int i = 0; i < n; i++) {
-        cin >> V[i];
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+
+    std::vector<long long> V(N);
+    for (long long &v : V) std::cin >> v;
+    std::sort(V.begin(), V.end());
+
+    long long ans = 0;
+    for (int i = 0; i < N; i++) {
+        if (V[i] > ans + 1) break;
+        ans += V[i];
     }
-    sort(V.begin(),V.end());
-    ll ans = 1;
-    for (int i = 0; i < n; i++) {
-        if (ans < V[i]) {
-            cout << ans << "\n";
-            return 0;
-        } else {
-            ans += V[i];
-        }
-    }
-    cout << ans << "\n";
+
+    std::cout << ans + 1 << "\n";
 }
