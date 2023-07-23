@@ -1,29 +1,27 @@
 #include <bits/stdc++.h>
-#define ll long long
-#define mod(x) (x % 1000000007)
-
-using namespace std;
 
 int main() {
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  int n, x;
-  cin >> n >> x;
-  vector<int> coins;
-  for (int i = 0; i < n; i++) {
-    int a;
-    cin >> a;
-    coins.push_back(a);
-  }
-  vector<ll> count(x+1);
-  count[0] = 1;
-  for (int i = 1; i <= x; i++) {
-    for (auto c : coins) {
-      if (i - c >= 0) {
-        count[i] += count[i-c];
-        count[i] = mod(count[i]);
-      }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, X; std::cin >> N >> X;
+    const int MOD = 1e9 + 7;
+
+    std::vector<int> V(N);
+    for (int& v : V) std::cin >> v;
+    std::sort(V.begin(), V.end());
+
+    std::vector<int> DP(X + 1, 0);
+    DP[0] = 1;
+
+    for (int i = 1; i <= X; i++) {
+        for (int q = 0; q < N; q++) {
+            if (V[q] > i) break;
+            DP[i] += DP[i-V[q]];
+            DP[i] %= MOD;
+        }
     }
-  }
-  cout << count[x] << "\n";
+
+    std::cout << DP[X] << "\n";
 }

@@ -1,23 +1,24 @@
 #include <bits/stdc++.h>
-#define ll long long
-#define mod(x) (x % 1000000007)
-
-using namespace std;
 
 int main() {
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  int n;
-  cin >> n;
-  vector<ll> count(n + 1);
-  count[0] = 1;
-  for (int x = 1; x <= n; x++) {
-    for (int c = 1; c <= 6; c++) {
-      if (x - c >= 0) {
-        count[x] += count[x-c];
-        count[x] = mod(count[x]);
-      }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+    const int MOD = 1e9 + 7;
+
+    std::vector<int> DP(N + 1, 0);
+    DP[0] = 1;
+
+    for (int i = 1; i <= N; i++) {
+        if (i >= 1) { DP[i] += DP[i-1]; DP[i] %= MOD; }
+        if (i >= 2) { DP[i] += DP[i-2]; DP[i] %= MOD; }
+        if (i >= 3) { DP[i] += DP[i-3]; DP[i] %= MOD; }
+        if (i >= 4) { DP[i] += DP[i-4]; DP[i] %= MOD; }
+        if (i >= 5) { DP[i] += DP[i-5]; DP[i] %= MOD; }
+        if (i >= 6) { DP[i] += DP[i-6]; DP[i] %= MOD; }
     }
-  }
-  cout << count[n] << "\n";
+
+    std::cout << DP[N] << "\n";
 }

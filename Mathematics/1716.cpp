@@ -1,40 +1,32 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
-int maxn = 2000000;
-int mod = 1000000007;
-vector<ll> FN(maxn+1), FI(maxn+1), NI(maxn+1);
+template<class T> struct combo_cache {
+    std::vector<T> INV, IFT, FCT, DRG; T MXN = 1e6, MOD = 1e9+7; // Variables
+    combo_cache(T n = 1e6, T m = 1e9+7) { MXN = n; MOD = m; init(); } // Constructor
 
-void inv() {
-    NI[0] = NI[1] = 1;
-    for (int i = 2; i <= maxn; i++)
-        NI[i] = (NI[mod%i] * (mod-mod/i)) % mod;
-}
+    void init() { INV.assign(MXN + 1, 0); INV[0] = INV[1] = 1; // Initializer
+        for (T i = 2; i <= MXN; i++) INV[i] = (MOD - MOD/i) * INV[MOD%i] % MOD;
+        IFT.assign(MXN + 1, 0); IFT[0] = IFT[1] = 1;
+        for (T i = 1; i <= MXN; i++) IFT[i] = IFT[i-1] * INV[i] % MOD;
+        FCT.assign(MXN + 1, 0); FCT[0] = FCT[1] = 1;
+        for (T i = 1; i <= MXN; i++) FCT[i] = FCT[i-1] * i % MOD;
+        DRG.assign(MXN + 1, 0); DRG[0] = 1; DRG[1] = 0;
+        for (T i = 2; i <= MXN; i++) DRG[i] = (i-1) * (DRG[i-1] + DRG[i-2]) % MOD; }
 
-void finv() {
-    FI[0] = FI[1] = 1;
-    for (int i = 2; i <= maxn; i++)
-        FI[i] = (NI[i] * FI[i-1]) % mod;
-}
-
-void fact() {
-    FN[0] = FN[1] = 1;
-    for (int i = 2; i <= maxn; i++)
-        FN[i] = (FN[i-1] * i) % mod;
-}
-
-ll nCr(ll n, ll r) {
-    ll ans = FN[n] * FI[r] % mod * FI[n-r] % mod;
-    return ans;
-}
+    T inv(T n) { return (n >= 0 && n <= MXN ? INV[n] : -1); } // Accessors
+    T ift(T n) { return (n >= 0 && n <= MXN ? IFT[n] : -1); }
+    T fct(T n) { return (n >= 0 && n <= MXN ? FCT[n] : -1); }
+    T drg(T n) { return (n >= 0 && n <= MXN ? DRG[n] : -1); }
+    T cat(T n) { return (n >= 0 && n <= MXN/2 ? bin(2*n, n) * inv(n+1) % MOD : -1); }
+    T bin (T n, T k) { return (k < n ? fct(n) * ift(k) % MOD * ift(n-k) % MOD : -1); }
+};
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    inv(); finv(); fact();
-    ll n, m; cin >> n >> m;
-    cout << nCr(n+m-1, n-1) << "\n";
-    cout << FI[10] << " " << FN[10] << "\n";
-    cout << (FI[10]*FN[10])%mod << "\n";
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, M; std::cin >> N >> M;
+    combo_cache<long long> CC(N+M);
+    std::cout << CC.bin(N+M-1, N-1) << "\n";
 }

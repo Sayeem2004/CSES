@@ -1,31 +1,29 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, x; cin >> n >> x;
-    vector<int> V(n);
-    for (int i = 0; i < n; i++)
-        cin >> V[i];
-    vector<arr<int,2>> DP(1<<n);
-    DP[0] = {1,0};
-    for (int i = 1; i < (1<<n); i++) {
-        DP[i] = {n+1,0};
-        for (int q = 0; q < n; q++) {
-            if (i & (1 << q)) {
-                auto prev = DP[i ^ (1 << q)];
-                if (prev[1]+V[q] <= x) {
-                    prev[1] += V[q];
-                } else {
-                    prev[0]++;
-                    prev[1] = V[q];
-                }
-                DP[i] = min(DP[i], prev);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N, X; std::cin >> N >> X;
+    std::vector<long long> V(N);
+    for (long long &v : V) std::cin >> v;
+
+    std::vector<std::pair<long long, long long>> DP(1 << N, {1e9, 1e9});
+    DP[0] = {1, 0};
+
+    for (int i = 1; i < 1 << N; i++) {
+        for (int q = 0; q < N; q++) {
+            if (i && (1 << q)) {
+                std::pair<long long, long long> prev = DP[i ^ (1 << q)];
+
+                if (prev.second + V[q] <= X) prev.second += V[q];
+                else { prev.first++; prev.second = V[q]; }
+
+                DP[i] = std::min(DP[i], prev);
             }
         }
     }
-    cout << DP[(1<<n)-1][0] << "\n";
+
+    std::cout << DP[(1 << N) - 1].first << "\n";
 }

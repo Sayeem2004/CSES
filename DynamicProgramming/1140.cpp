@@ -1,37 +1,34 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n; cin >> n;
-    vector<ll> S(n), E(n), C(n);
-    map<ll, ll> P;
-    for (int i = 0; i < n; i++) {
-        ll a, b, c; cin >> a >> b >> c;
-        S[i] = a;
-        E[i] = b+1;
-        C[i] = c;
-        P[S[i]] = 0;
-        P[E[i]] = 0;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    long long N; std::cin >> N;
+    std::map<long long, long long> IND;
+    std::vector<long long> S(N), E(N), V(N);
+
+    for (int i = 0; i < N; i++) {
+        std::cin >> S[i] >> E[i] >> V[i];
+        IND[S[i]] = IND[++E[i]] = 0;
     }
-    ll cnt = 0;
-    for (auto x : P) {
-        P[x.first] = cnt;
-        cnt++;
+
+    long long cnt = 0;
+    for (std::pair<long long, long long> p : IND) IND[p.first] = cnt++;
+
+    std::vector<std::vector<std::array<long long, 2>>> SPEC(cnt);
+    for (int i = 0; i < N; i++) {
+        SPEC[IND[E[i]]].push_back({IND[S[i]], V[i]});
     }
-    vector<vector<arr<ll,2>>> V(cnt);
-    for (int i = 0; i < n; i++) {
-        V[P[E[i]]].push_back({P[S[i]], C[i]});
-    }
-    vector<ll> dp(cnt);
+
+    std::vector<long long> DP(cnt, 0);
     for (int i = 0; i < cnt; i++) {
-        if (i != 0) dp[i] = dp[i-1];
-        for (auto v : V[i]) {
-            dp[i] = max(dp[i], dp[v[0]]+v[1]);
+        if (i > 0) DP[i] = DP[i - 1];
+        for (std::array<long long, 2> p : SPEC[i]) {
+            DP[i] = std::max(DP[i], DP[p[0]] + p[1]);
         }
     }
-    cout << dp[cnt-1] << "\n";
+
+    std::cout << DP[cnt - 1] << "\n";
 }

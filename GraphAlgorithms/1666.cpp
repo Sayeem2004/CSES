@@ -1,39 +1,43 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
+
+template<class T> struct disjoint_set {
+    std::unordered_map<T, T> TREE; std::unordered_map<T, int> SIZE; // Variables & Constructor
+    disjoint_set(std::vector<T> V = {}) { for (T x : V) add(x); }
+
+    bool add(T x) { return TREE.count(x) ? 0 : (TREE[x] = x, SIZE[x] = 1); } // Mutators
+    bool unite(T x, T y) { x = get(x), y = get(y); // Union by size
+        if (x == y) return 0; if (SIZE[x] < SIZE[y]) std::swap(x, y);
+        TREE[y] = x; SIZE[x] += SIZE[y]; return 1; }
+
+    int size(T x) { return SIZE[get(x)]; } // Accessors
+    bool same(T x, T y) { return get(x) == get(y); }
+    T get(T x) { return TREE[x] == x ? x : TREE[x] = get(TREE[x]); }
+    void print() { for (auto i = TREE.begin(); i != TREE.end(); i++)
+        std::printf("%d -> {%d} (%d)\n", i->first, get(i->first), size(i->first)); }
+};
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, m; cin >> n >> m;
-    vector<vector<int>> A(n, vector<int>());
-    for (int i = 0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        A[a-1].push_back(b-1);
-        A[b-1].push_back(a-1);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, M; std::cin >> N >> M;
+    disjoint_set<int> DS;
+    for (int i = 0; i < N; i++) DS.add(i);
+
+    for (int i = 0; i < M; i++) {
+        int a, b; std::cin >> a >> b;
+        DS.unite(a - 1, b - 1);
     }
-    vector<bool> V(n);
-    vector<int> P;
+
     int ans = 0;
-    for (int i = 0; i < n; i++) {
-        if (V[i]) continue;
-        ans++;
-        P.push_back(i);
-        queue<int> Q;
-        Q.push(i);
-        while (!Q.empty()) {
-            int node = Q.front();
-            Q.pop();
-            if (V[node]) continue;
-            V[node] = true;
-            for (auto x : A[node]) {
-                if (V[x]) continue;
-                Q.push(x);
-            }
-        }
+    std::vector<int> ANS;
+    for (int i = 0; i < N; i++) {
+        if (DS.same(0, i)) continue;
+        ans++; ANS.push_back(i + 1);
+        DS.unite(0, i);
     }
-    cout << ans-1 << "\n";
-    for (int i = 1; i < P.size(); i++) {
-        cout << P[0]+1 << " " << P[i]+1 << "\n";
-    }
+
+    std::cout << ans << "\n";
+    for (int x : ANS) std::cout << 1 << " " << x << "\n";
 }

@@ -1,108 +1,93 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll n, m; cin >> n >> m;
-    vector<vector<bool>> C(n,vector<bool>(m));
-    arr<ll,2> person;
-    vector<arr<ll,2>> monsters;
-    vector<arr<ll,2>> exits;
-    for (int i = 0; i < n; i++) {
-        for (int q = 0; q < m; q++) {
-            char c; cin >> c;
-            if (c == '#') continue;
-            else {
-                C[i][q] = true;
-                if (c == 'A') {
-                    person = {i, q};
-                }
-                if (c == 'M') {
-                    monsters.push_back({i, q});
-                }
-                if (i == n-1 || i == 0 || q == m-1 || q == 0) {
-                    exits.push_back({i, q});
-                }
-            }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, M; std::cin >> N >> M;
+    std::vector<std::vector<bool>> MVIS(N, std::vector<bool>(M, false));
+    std::vector<std::vector<bool>> PVIS(N, std::vector<bool>(M, false));
+    std::vector<std::pair<int, int>> DIRS = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    std::vector<std::pair<int, int>> MONS, EXITS;
+    std::pair<int, int> START;
+
+    for (int i = 0; i < N; i++) {
+        std::string s; std::cin >> s;
+        for (int q = 0; q < M; q++) {
+            MVIS[i][q] = (s[q] == '#');
+            PVIS[i][q] = (s[q] == '#');
+            if (s[q] == 'M') MONS.push_back({i, q});
+            if (s[q] == 'A') START = {i, q};
+            if ((i == 0 || i == N - 1) && s[q] != '#') EXITS.push_back({i, q});
+            else if ((q == 0 || q == M - 1) && s[q] != '#') EXITS.push_back({i, q});
         }
     }
-    vector<vector<ll>> MD(n, vector<ll>(m, 1e18));
-    vector<arr<ll,2>> M = {{1,0},{0,1},{-1,0},{0,-1}};
-    vector<vector<bool>> MV(n, vector<bool>(m));
-    queue<arr<ll,2>> MQ;
-    for (auto x : monsters) {
-        MD[x[0]][x[1]] = 0;
-        MQ.push(x);
-    }
+
+    std::vector<std::vector<int>> MDIST(N, std::vector<int>(M, 1e9));
+    std::queue<std::pair<int, int>> MQ;
+    for (std::pair<int, int> mon : MONS) { MQ.push(mon); MDIST[mon.first][mon.second] = 0; }
+
     while (!MQ.empty()) {
-        arr<ll,2> node = MQ.front();
-        MQ.pop();
-        if (MV[node[0]][node[1]]) continue;
-        MV[node[0]][node[1]] = true;
-        for (auto d : M) {
-            int x = node[0] + d[0];
-            int y = node[1] + d[1];
-            if (x < 0 || x >= n || y < 0 || y >= m) continue;
-            if (MV[x][y] || !C[x][y]) continue;
-            MQ.push({x,y});
-            MD[x][y] = min(MD[x][y], MD[node[0]][node[1]]+1);
+        std::pair<int, int> node = MQ.front(); MQ.pop();
+        if (MVIS[node.first][node.second]) continue;
+        MVIS[node.first][node.second] = true;
+
+        for (std::pair<int, int> dir : DIRS) {
+            int nx = node.first + dir.first, ny = node.second + dir.second;
+            if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
+
+            if (MVIS[nx][ny]) continue;
+            if (MDIST[nx][ny] <= MDIST[node.first][node.second] + 1) continue;
+
+            MDIST[nx][ny] = MDIST[node.first][node.second] + 1;
+            MQ.push({nx, ny});
         }
     }
-    vector<vector<ll>> D(n, vector<ll>(m, 1e18));
-    vector<vector<bool>> V(n, vector<bool>(m));
-    queue<arr<ll,2>> Q;
-    vector<vector<arr<ll,2>>> P(n, vector<arr<ll,2>>(m, arr<ll,2>{-1,-1}));
-    D[person[0]][person[1]] = 0;
-    Q.push(person);
-    while (!Q.empty()) {
-        arr<ll,2> point = Q.front();
-        Q.pop();
-        if (V[point[0]][point[1]]) continue;
-        V[point[0]][point[1]] = true;
-        for (auto d : M) {
-            ll x = point[0] + d[0];
-            ll y = point[1] + d[1];
-            if (x < 0 || x >= n || y < 0 || y >= m) continue;
-            if (V[x][y] || !C[x][y]) continue;
-            D[x][y] = min(D[x][y], D[point[0]][point[1]]+1);
-            if (D[x][y] >= MD[x][y]) continue;
-            Q.push({x,y});
-            P[x][y] = point;
+
+    std::vector<std::vector<int>> PDIST(N, std::vector<int>(M, 1e9));
+    std::vector<std::vector<std::pair<int, int>>> PREV(N, std::vector<std::pair<int, int>>(M, {-1, -1}));
+    std::queue<std::pair<int, int>> PQ;
+    PQ.push(START); PDIST[START.first][START.second] = 0;
+
+    while (!PQ.empty()) {
+        std::pair<int, int> node = PQ.front(); PQ.pop();
+        if (PVIS[node.first][node.second]) continue;
+        PVIS[node.first][node.second] = true;
+
+        for (std::pair<int, int> dir : DIRS) {
+            int nx = node.first + dir.first, ny = node.second + dir.second;
+            if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
+
+            if (PVIS[nx][ny]) continue;
+            if (PDIST[nx][ny] <= PDIST[node.first][node.second] + 1) continue;
+            if (MDIST[nx][ny] <= PDIST[node.first][node.second] + 1) continue;
+
+            PDIST[nx][ny] = PDIST[node.first][node.second] + 1;
+            PREV[nx][ny] = node; PQ.push({nx, ny});
         }
     }
-    for (auto e : exits) {
-        if (e[0] == person[0] && e[1] == person[1]) {
-            cout << "YES" << "\n";
-            cout << 0 << "\n";
-            return 0;
+
+    for (std::pair<int, int> exit : EXITS) {
+        if (PDIST[exit.first][exit.second] == 1e9) continue;
+        if (exit.first == START.first && exit.second == START.second) {
+            std::cout << "YES\n"; std::cout << 0 << "\n"; return 0;
         }
-        arr<ll,2> prev = P[e[0]][e[1]];
-        if (abs(prev[0]-e[0]) + abs(prev[1]-e[1]) != 1) continue;
-        else {
-            cout << "YES" << "\n";
-            int l = 1;
-            string s;
-            if (prev[0]-e[0] == 1) s = "U";
-            if (prev[0]-e[0] == -1) s = "D";
-            if (prev[1]-e[1] == 1) s = "L";
-            if (prev[1]-e[1] == -1) s = "R";
-            while (prev[0] != person[0] || prev[1] != person[1]) {
-                arr<ll,2> nw = P[prev[0]][prev[1]];
-                if (nw[0]-prev[0] == 1) s += "U";
-                if (nw[0]-prev[0] == -1) s += "D";
-                if (nw[1]-prev[1] == 1) s += "L";
-                if (nw[1]-prev[1] == -1) s += "R";
-                l++;
-                prev = nw;
-            }
-            cout << l << "\n";
-            reverse(s.begin(),s.end());
-            cout << s << "\n";
-            return 0;
+
+        if (PREV[exit.first][exit.second].first == -1) continue;
+        if (PREV[exit.first][exit.second].second == -1) continue;
+
+        std::string ANS = "";
+        while (exit.first != START.first || exit.second != START.second) {
+            std::pair<int, int> prev = PREV[exit.first][exit.second];
+            if (prev.first == exit.first) { ANS += (prev.second < exit.second ? "R" : "L"); }
+            else { ANS += (prev.first < exit.first ? "D" : "U"); }
+            exit = prev;
         }
+
+        std::reverse(ANS.begin(), ANS.end());
+        std::cout << "YES\n"; std::cout << ANS.size() << "\n"; std::cout << ANS << "\n";
     }
-    cout << "NO" << "\n";
+
+    std::cout << "NO\n";
 }

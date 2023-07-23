@@ -1,71 +1,67 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-#define arr array
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, m; cin >> n >> m;
-    vector<vector<bool>> C(n,vector<bool>(m));
-    arr<int,2> start, end;
-    for (int i = 0; i < n; i++) {
-        for (int q = 0; q < m; q++) {
-            char c; cin >> c;
-            if (c == '#') continue;
-            else {
-                C[i][q] = true;
-                if (c == 'A') {
-                    start[0] = i;
-                    start[1] = q;
-                }
-                if (c == 'B') {
-                    end[0] = i;
-                    end[1] = q;
-                }
-            }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, M; std::cin >> N >> M;
+    int sr, sc, er, ec;
+
+    std::vector<std::vector<bool>> G(N, std::vector<bool>(M));
+    for (int i = 0; i < N; i++) {
+        for (int q = 0; q < M; q++) {
+            char c; std::cin >> c;
+            G[i][q] = c == '#';
+
+            if (c == 'A') { sr = i; sc = q; }
+            if (c == 'B') { er = i; ec = q; }
         }
     }
-    vector<vector<bool>> V(n, vector<bool>(m));
-    vector<vector<arr<int,2>>> P(n, vector<arr<int,2>>(m, arr<int,2>{0,0}));
-    vector<arr<int,2>> D = {{1,0},{0,1},{-1,0},{0,-1}};
-    queue<arr<int,2>> Q;
-    Q.push(start);
+
+    std::vector<std::pair<int, int>> D = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    std::vector<std::vector<int>> P(N, std::vector<int>(M, -1));
+    std::queue<std::pair<int, int>> Q;
+
+    Q.push({sr, sc});
     while (!Q.empty()) {
-        arr<int,2> point = Q.front();
-        Q.pop();
-        if (V[point[0]][point[1]]) continue;
-        else V[point[0]][point[1]] = true;
-        for (auto d : D) {
-            int x = point[0] + d[0];
-            int y = point[1] + d[1];
-            if (x < 0 || x >= n || y < 0 || y >= m) continue;
-            if (V[x][y] || !C[x][y]) continue;
-            Q.push({x,y});
-            P[x][y] = point;
+        std::pair<int, int> curr = Q.front(); Q.pop();
+        int r = curr.first, c = curr.second;
+
+        if (G[r][c]) continue; G[r][c] = true;
+
+        for (std::pair<int, int> d : D) {
+            int nr = r + d.first, nc = c + d.second;
+            if (nr < 0 || nr >= N || nc < 0 || nc >= M) continue;
+            if (G[nr][nc]) continue;
+
+            P[nr][nc] = r * M + c;
+            Q.push({nr, nc});
         }
     }
-    arr<int,2> prev = P[end[0]][end[1]];
-    if (abs(prev[0]-end[0]) + abs(prev[1]-end[1]) != 1) cout << "NO" << "\n";
-    else {
-        cout << "YES" << "\n";
-        int l = 1;
-        string s;
-        if (prev[0]-end[0] == 1) s = "U";
-        if (prev[0]-end[0] == -1) s = "D";
-        if (prev[1]-end[1] == 1) s = "L";
-        if (prev[1]-end[1] == -1) s = "R";
-        while (prev[0] != start[0] || prev[1] != start[1]) {
-            arr<int,2> nw = P[prev[0]][prev[1]];
-            if (nw[0]-prev[0] == 1) s += "U";
-            if (nw[0]-prev[0] == -1) s += "D";
-            if (nw[1]-prev[1] == 1) s += "L";
-            if (nw[1]-prev[1] == -1) s += "R";
-            l++;
-            prev = nw;
+
+    if (P[er][ec] == -1) { std::cout << "NO\n"; return 0; }
+
+    std::cout << "YES\n";
+    std::vector<char> ANS;
+    int r = er, c = ec;
+
+    while (r != sr || c != sc) {
+        int pr = P[r][c] / M, pc = P[r][c] % M;
+
+        if (pr == r) {
+            if (pc < c) ANS.push_back('R');
+            else ANS.push_back('L');
+        } else {
+            if (pr < r) ANS.push_back('D');
+            else ANS.push_back('U');
         }
-        cout << l << "\n";
-        reverse(s.begin(),s.end());
-        cout << s << "\n";
+
+        r = pr; c = pc;
     }
+
+    std::reverse(ANS.begin(), ANS.end());
+    std::cout << ANS.size() << "\n";
+    for (char c : ANS) std::cout << c;
+    std::cout << "\n";
 }

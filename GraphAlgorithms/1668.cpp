@@ -1,37 +1,35 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-vector<vector<int>> A(200000);
-vector<int> T(200000);
-bool e = false;
 
-void dfs(int node, int team) {
-    T[node] = team;
-    for (auto x : A[node]) {
-        if (T[x] == 0)
-            dfs(x, 3-team);
-        if (T[x] == T[node]) e = true;
-    }
+bool dfs(int v, int c, std::vector<int>& COLOR, const std::vector<std::vector<int>>& ADJ) {
+    if (COLOR[v] != -1) return COLOR[v] == c;
+    COLOR[v] = c;
+
+    bool res = true;
+    for (int u : ADJ[v]) { res &= dfs(u, 1-c, COLOR, ADJ); }
+    return res;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, m; cin >> n >> m;
-    for (int i = 0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        A[a-1].push_back(b-1);
-        A[b-1].push_back(a-1);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, M; std::cin >> N >> M;
+
+    std::vector<std::vector<int>> ADJ(N);
+    for (int i = 0; i < M; ++i) {
+        int u, v; std::cin >> u >> v;
+        ADJ[u-1].push_back(v-1);
+        ADJ[v-1].push_back(u-1);
     }
-    for (int i = 0; i < n; i++) {
-        if (T[i] == 0)
-            dfs(i, 1);
+
+    std::vector<int> COLOR(N, -1);
+    bool res = true;
+    for (int i = 0; i < N; ++i) {
+        if (COLOR[i] == -1) { res &= dfs(i, 0, COLOR, ADJ); }
     }
-    if (e) {
-        cout << "IMPOSSIBLE\n";
-    } else {
-        for (int i = 0; i < n; i++)
-            cout << T[i] << " ";
-        cout << "\n";
-    }
+
+    if (!res) { std::cout << "IMPOSSIBLE\n"; }
+    for (int v : COLOR) { std::cout << v+1 << ' '; }
+    std::cout << '\n';
 }

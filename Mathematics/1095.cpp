@@ -1,27 +1,19 @@
 #include <bits/stdc++.h>
-#define ll long long
 
-using namespace std;
-
-ll modpow(int x, int n, int m) {
-  if (n == 0) {
-    return 1 % m;
-  }
-  long long u = modpow(x, n/2, m);
-  u = (u * u) % m;
-  if (n % 2 == 1) {
-    u = (u * x) % m;
-  }
-  return u;
-}
+template<class T> struct num_util {
+    T gcd(T a, T b) { return b ? gcd(b, a % b) : a; }
+    T lcm(T a, T b) { return a / gcd(a, b) * b; }
+    T pow(T a, T b, T m) { if (!b) return 1; T r = pow(a*a%m, b/2, m); return b&1 ? r*a%m : r; }
+};
 
 int main() {
-  int n;
-  cin >> n;
-  for (int i = 0; i < n; i++) {
-    int a, b;
-    cin >> a >> b;
-    ll ans = modpow(a, b, 1000000007);
-    cout << ans << "\n";
-  }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int T; std::cin >> T; while (T--) {
+        long long A, B; std::cin >> A >> B;
+        num_util<long long> NU;
+        std::cout << NU.pow(A, B, 1e9+7) << "\n";
+    }
 }

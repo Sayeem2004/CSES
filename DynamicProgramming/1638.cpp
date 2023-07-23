@@ -1,44 +1,32 @@
 #include <bits/stdc++.h>
-using namespace std;
-
-#define lltos(x) to_string(x)
-#define stoll(x) stoll(x)
-#define ctoi(x) (x-'0')
-#define pb(x) push_back(x)
-#define pf(x) push_front(x)
-#define all(x) (x).begin(),(x).end()
-#define rall(x) (x).rbegin(),(x).rend()
-#define sz(x) (int)(x).size()
-typedef long long ll;
-typedef long double ld;
-const ll mod = 1e9 + 7;
-const ld pi = acos((ld)-1);
-const ld e = exp(1);
 
 int main() {
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  ll n; cin >> n;
-  ll count[n][n];
-  for (int i = 0; i < n; i++) {
-    string s; cin >> s;
-    for (ll q = 0; q < n; q++) {
-      if (s[q] == '.') count[i][q] = 0;
-      else count[i][q] = -1;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+    const int MOD = 1e9 + 7;
+
+    std::vector<std::vector<int>> DP(N, std::vector<int>(N, 0));
+    DP[0][0] = 1;
+
+    for (int i = 0; i < N; i++) {
+        for (int q = 0; q < N; q++) {
+            char c; std::cin >> c;
+            if (c == '*') DP[i][q] = -1;
+        }
     }
-  }
-  if (count[0][0] == -1 || count[n-1][n-1] == -1) {
-    cout << 0 << "\n"; return 0;
-  }
-  count[0][0] = 1;
-  for (ll i = 0; i < n; i++) {
-    for (ll q = 0; q < n; q++) {
-      if (count[i][q] == -1) continue;
-      if (i == 0 && q == 0) continue;
-      if (i == 0) count[i][q] = max(0LL,count[i][q-1]) % mod;
-      else if (q == 0) count[i][q] = max(0LL,count[i-1][q]) % mod;
-      else count[i][q] = (max(0LL,count[i][q-1])+max(0LL,count[i-1][q])) % mod;
+
+    for (int i = 0; i < N; i++) {
+        for (int q = 0; q < N; q++) {
+            if (DP[i][q] == -1 || (i == 0 && q == 0)) continue;
+
+            int abv = i > 0 ? std::max(DP[i - 1][q], 0) : 0;
+            int lft = q > 0 ? std::max(DP[i][q - 1], 0) : 0;
+            DP[i][q] = (abv + lft) % MOD;
+        }
     }
-  }
-  cout << count[n-1][n-1] << "\n";
+
+    std::cout << std::max(DP[N - 1][N - 1], 0) << "\n";
 }

@@ -1,33 +1,37 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    int sm = 0;
-    vector<int> V(n);
-    for (int i = 0; i < n; i++) {
-        cin >> V[i];
-        sm += V[i];
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+
+    int SM = 0;
+    std::vector<int> V(N);
+    for (int &v : V) {
+        std::cin >> v;
+        SM += v;
     }
-    vector<vector<bool>> dp(n+1, vector<bool>(sm+1));
-    dp[0][0] = true;
-    for (int i = 1; i <= n; i++) {
-        for (int q = 0; q <= sm; q++) {
-            dp[i][q] = dp[i-1][q];
-            if (V[i-1] <= q)
-                dp[i][q] = dp[i][q] || dp[i-1][q-V[i-1]];
+
+    std::vector<std::vector<bool>> DP(N+1, std::vector<bool>(SM+1, false));
+    for (int i = 0; i <= N; i++) DP[i][0] = true;
+
+    for (int i = 1; i <= N; i++) {
+        for (int q = 1; q <= SM; q++) {
+            DP[i][q] = DP[i-1][q] || (q >= V[i-1] ? DP[i-1][q-V[i-1]] : false);
         }
     }
-    vector<int> ans;
-    for (int q = 1; q <= sm; q++) {
-        if (dp[n][q]) ans.push_back(q);
+
+    int ans = 0;
+    std::vector<bool> ANS(SM+1, false);
+    for (int i = 1; i <= SM; i++) {
+        if (DP[N][i]) { ANS[i] = true; ans++; }
     }
-    cout << ans.size() << "\n";
-    for (auto x : ans) {
-        cout << x << " ";
+
+    std::cout << ans << "\n";
+    for (int i = 1; i <= SM; i++) {
+        if (ANS[i]) std::cout << i << " ";
     }
-    cout << "\n";
+    std::cout << "\n";
 }

@@ -1,19 +1,20 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll long long
 
 int main() {
-    ll n; cin >> n;
-    set<ll> S;
-    for (int i = 0; i < n; i++) {
-        ll x; cin >> x;
-        auto it = S.lower_bound(x);
-        if (it == S.end()) S.insert(x);
-        else {
-            S.erase(it);
-            S.insert(x);
-        }
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
 
-  }
-  cout << S.size() << "\n";
+    int N; std::cin >> N;
+    std::multiset<int> MS;
+
+    for (int i = 0; i < N; i++) {
+        int x; std::cin >> x;
+        std::multiset<int>::iterator it = MS.lower_bound(x);
+
+        if (it == MS.end()) MS.insert(x);
+        else { MS.erase(it); MS.insert(x); }
+    }
+
+    std::cout << MS.size() << "\n";
 }

@@ -1,5 +1,11 @@
 #include <bits/stdc++.h>
 
+template<class T> struct num_util {
+    T gcd(T a, T b) { return b ? gcd(b, a % b) : a; }
+    T lcm(T a, T b) { return a / gcd(a, b) * b; }
+    T pow(T a, T b, T m) { if (!b) return 1; T r = pow(a*a%m, b/2, m); return b&1 ? r*a%m : r; }
+};
+
 template<class T> struct combo_cache {
     std::vector<T> INV, IFT, FCT, DRG; T MXN = 1e6, MOD = 1e9+7; // Variables
     combo_cache(T n = 1e6, T m = 1e9+7) { MXN = n; MOD = m; init(); } // Constructor
@@ -27,6 +33,15 @@ int main() {
     // freopen("", "w", stdout);
 
     long long N; std::cin >> N;
+    num_util<long long> NU;
     combo_cache<long long> CC;
-    std::cout << CC.drg(N) << "\n";
+
+    long long ans = 0, mod = 1e9+7;
+    ans += NU.pow(2, N*N, mod); ans %= mod;
+    ans += NU.pow(2, N*N/4 + N%2, mod); ans %= mod;
+    ans += NU.pow(2, N*N/2 + N%2, mod); ans %= mod;
+    ans += NU.pow(2, N*N/4 + N%2, mod); ans %= mod;
+
+    ans *= CC.inv(4); ans %= mod;
+    std::cout << ans << "\n";
 }

@@ -1,53 +1,47 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n, m; cin >> n >> m;
-    vector<vector<int>> A(n, vector<int>(0));
-    for (int i = 0; i < m; i++) {
-        int a, b; cin >> a >> b;
-        A[a-1].push_back(b-1);
-        A[b-1].push_back(a-1);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N, M; std::cin >> N >> M;
+
+    std::vector<std::vector<int>> ADJ(N);
+    for (int i = 0; i < M; i++) {
+        int u, v; std::cin >> u >> v;
+        ADJ[u-1].push_back(v-1);
+        ADJ[v-1].push_back(u-1);
     }
-    vector<bool> V(n);
-    vector<int> P(n, -1);
-    vector<int> D(n, 2000000000);
-    queue<int> Q;
-    Q.push(0);
-    D[0] = 0;
-    while (!Q.empty()) {
-        int node = Q.front();
-        Q.pop();
-        if (V[node]) continue;
-        V[node] = true;
-        for (auto x : A[node]) {
-            if (V[x]) continue;
-            if (D[node]+1 < D[x]) {
-                D[x] = D[node]+1;
-                P[x] = node;
-                Q.push(x);
+
+    std::vector<int> DIST(N, 1e9), PREV(N, -1), VIS(N, 0);
+    typedef std::pair<int, int> node;
+    std::priority_queue<node, std::vector<node>, std::greater<node>> PQ;
+    PQ.push({0, 0});
+
+    while (!PQ.empty()) {
+        std::pair<int, int> p = PQ.top(); PQ.pop();
+        int v = p.second, d = p.first;
+
+        if (VIS[v]) continue;
+        VIS[v] = true;
+
+        for (int u : ADJ[v]) {
+            if (VIS[u]) continue;
+            if (DIST[u] > d+1) {
+                PQ.push({d+1, u});
+                DIST[u] = d+1; PREV[u] = v;
             }
         }
     }
-    if (D[n-1] == 2000000000) cout << "IMPOSSIBLE\n";
-    else {
-        vector<int> PT;
-        int prev = n-1;
-        int l = 1;
-        while (prev != 0) {
-            PT.push_back(prev);
-            prev = P[prev];
-            l++;
-        }
-        reverse(PT.begin(),PT.end());
-        cout << l << "\n";
-        cout << 1 << " ";
-        for (auto x : PT)
-            cout << x+1 << " ";
-        cout << "\n";
-    }
+
+    if (DIST[N-1] == 1e9) { std::cout << "IMPOSSIBLE\n"; return 0; }
+
+    std::cout << DIST[N-1] + 1 << "\n";
+    std::vector<int> PATH;
+    for (int v = N-1; v != -1; v = PREV[v]) PATH.push_back(v+1);
+
+    std::reverse(PATH.begin(), PATH.end());
+    for (int v : PATH) std::cout << v << " ";
+    std::cout << "\n";
 }
