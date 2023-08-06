@@ -1,25 +1,17 @@
 #include <bits/stdc++.h>
 
-template<class T> struct segment_tree {
-    std::vector<T> SEG; int N; T DEF = (T) NULL; // Variables & Helpers
-    T (*OP)(T, T) = [](T a, T b) { return std::max(a, b); };
+template<typename T> struct sparse_table {
+    std::vector<std::vector<T>> ST; int N, K; T (*OP)(T, T); // Variables & Constructors
+    sparse_table(int n, std::vector<T> &V, T (*c)(T, T) = [](T a, T b) { return std::min(a, b); }) : N(n), OP(c) {
+        K = log2(N); ST.assign(K+1, std::vector<T>(N)); std::copy(V.begin(), V.end(), ST[0].begin());
+        for (int k = 1; k <= K; k++) for (int i = 0; i + (1 << k) <= N; i++)
+        ST[k][i] = OP(ST[k-1][i], ST[k-1][i+(1<<(k-1))]); }
 
-    segment_tree(int n) { N = n; SEG.assign(2 * N, DEF); } // Constructors
-    segment_tree(int n, T d) : segment_tree(n) { DEF = d; }
-    segment_tree(int n, T d, T (*c)(T, T)) : segment_tree(n, d) { OP = c; }
-
-    void pull(int p) { SEG[p] = OP(SEG[2 * p], SEG[2 * p + 1]); } // Mutators
-    void update(int p, T v) { if (p < 0 || p >= N) return;
-        SEG[p += N] = v; for (p /= 2; p; p /= 2) pull(p); }
-
-    T get(int p) { return (p < 0 || p >= N ? DEF : SEG[p + N]); } // Accessors
-    void print() { for (T elem : SEG) std::cout << elem << " "; std::cout << "\n"; }
-    T query(int l, int r) { T ra = DEF, rb = DEF; // [l, r]
-        if (l < 0 || r < 0 || l >= N || r >= N || l > r) return DEF;
-        for (l += N, r += N + 1; l < r; l /= 2, r /= 2) {
-            if (l & 1) ra = OP(ra, SEG[l++]);
-            if (r & 1) rb = OP(SEG[--r], rb);
-        } return OP(ra, rb); }
+    int log2(int n) { return 31 - __builtin_clz(n); } // Helpers & Accessors
+    void print() { for (auto V : ST) { for (T v : V) std::cout << v << " "; std::cout << "\n"; } }
+    T idem(int l, int r) { int k = log2(r-l+1); return OP(ST[k][l], ST[k][r-(1<<k)+1]); } // [l, r]
+    T query(int l, int r, int d = 0) { T val = d; for (int i = K; i >= 0; i--) {
+        if (1<<i <= r - l + 1) { val = OP(val, ST[i][l]); l += (1<<i); } } return val; }
 };
 
 int main() {
@@ -27,16 +19,14 @@ int main() {
     // freopen("", "r", stdin);
     // freopen("", "w", stdout);
 
-    int N, Q; std::cin >> N >> Q;
+    long long N, Q; std::cin >> N >> Q;
+    std::vector<long long> V(N);
+    for (long long &v : V) std::cin >> v;
 
-    segment_tree<long long> ST(N, 0, [](long long a, long long b) { return a + b; });
-    for (int i = 0; i < N; i++) {
-        int x; std::cin >> x;
-        ST.update(i, x);
-    }
+    sparse_table<long long> ST(N, V, [](long long a, long long b) { return a+b; });
 
     for (int i = 0; i < Q; i++) {
-        int a, b; std::cin >> a >> b; a--; b--;
-        std::cout << ST.query(a, b) << "\n";
+        int l, r; std::cin >> l >> r;
+        std::cout << ST.query(l-1, r-1) << "\n";
     }
 }

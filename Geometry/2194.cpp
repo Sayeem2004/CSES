@@ -27,7 +27,27 @@ int main() {
     std::vector<vec<long long>> P(N);
     for (vec<long long> &p : P) p.read2();
 
-    long long area = 0;
-    for (int i = 0; i < N; i++) area += P[0].tri2(P[i], P[(i + 1) % N]);
-    std::cout << std::abs(area) << "\n";
+    std::sort(P.begin(), P.end());
+    std::set<vec<long long>> S;
+    long long ans = 8e18, pos = 0;
+
+    for (int i = 0; i < N; i++) {
+        long long dist = std::sqrt(ans) + 1;
+        while ((P[i].X - P[pos].X) > dist) {
+            S.erase(vec<long long>(P[pos].Y, P[pos].X));
+            pos++;
+        }
+
+        auto it1 = S.lower_bound(vec<long long>(P[i].Y - dist, P[i].X));
+        auto it2 = S.upper_bound(vec<long long>(P[i].Y + dist, P[i].X));
+
+        for (auto it = it1; it != it2; it++) {
+            vec<long long> p(it->Y, it->X);
+            ans = std::min(ans, (P[i] - p).norm());
+        }
+
+        S.insert(vec<long long>(P[i].Y, P[i].X));
+    }
+
+    std::cout << ans << "\n";
 }

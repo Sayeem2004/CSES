@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 
-template<class T> struct combo_cache {
-    std::vector<T> INV, IFT, FCT, DRG; T MXN = 1e6, MOD = 1e9+7; // Variables
-    combo_cache(T n = 1e6, T m = 1e9+7) { MXN = n; MOD = m; init(); } // Constructor
+template<typename T> struct combo_cache {
+    std::vector<T> INV, IFT, FCT, DRG; T MXN, MOD; // Variables
+    combo_cache(T n = 1e6, T m = 1e9+7) : MXN(n), MOD(m) { init(); } // Constructor
 
     void init() { INV.assign(MXN + 1, 0); INV[0] = INV[1] = 1; // Initializer
         for (T i = 2; i <= MXN; i++) INV[i] = (MOD - MOD/i) * INV[MOD%i] % MOD;

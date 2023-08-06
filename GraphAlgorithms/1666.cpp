@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 
-template<class T> struct disjoint_set {
-    std::unordered_map<T, T> TREE; std::unordered_map<T, int> SIZE; // Variables & Constructor
-    disjoint_set(std::vector<T> V = {}) { for (T x : V) add(x); }
+template<typename T> struct disjoint_set {
+    std::unordered_map<T, T> TREE; std::unordered_map<T, int> SIZE; // Variables
+    disjoint_set(std::vector<T> V = {}) { for (T x : V) add(x); } // Constructor
 
     bool add(T x) { return TREE.count(x) ? 0 : (TREE[x] = x, SIZE[x] = 1); } // Mutators
     bool unite(T x, T y) { x = get(x), y = get(y); // Union by size
-        if (x == y) return 0; if (SIZE[x] < SIZE[y]) std::swap(x, y);
+        if (x == y) return 0; if (SIZE[x] < SIZE[y]) swap(x, y);
         TREE[y] = x; SIZE[x] += SIZE[y]; return 1; }
 
     int size(T x) { return SIZE[get(x)]; } // Accessors

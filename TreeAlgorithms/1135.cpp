@@ -24,16 +24,15 @@ int main() {
     // freopen("", "w", stdout);
 
     int N, Q; std::cin >> N >> Q;
-
     std::vector<std::vector<int>> ADJ(N);
     for (int i = 0; i < N-1; i++) {
-        int x; std::cin >> x;
-        ADJ[x-1].push_back(i+1);
+        int a, b; std::cin >> a >> b; a--; b--;
+        ADJ[a].push_back(b); ADJ[b].push_back(a);
     }
 
     segment_lca<int> LCA(N, ADJ);
     for (int i = 0; i < Q; i++) {
-        int a, b; std::cin >> a >> b;
-        std::cout << LCA.find(a-1, b-1) + 1 << "\n";
+        int a, b; std::cin >> a >> b; a--; b--;
+        std::cout << LCA.dist(a, b) << "\n";
     }
 }

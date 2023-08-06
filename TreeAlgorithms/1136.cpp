@@ -18,22 +18,32 @@ template<typename T> struct segment_lca { // Variables & Constructors
         { if (l & 1) ra = comb(ra, SEG[l++]); if (r & 1) rb = comb(SEG[--r], rb); } return comb(ra, rb); }
 };
 
+void dfs(int v, int p, std::vector<std::vector<int>> &ADJ, std::vector<int> &DP) {
+    for (int u : ADJ[v]) { if (u != p) { dfs(u, v, ADJ, DP); DP[v] += DP[u]; } }
+}
+
 int main() {
     std::ios::sync_with_stdio(0); std::cin.tie(0);
     // freopen("", "r", stdin);
     // freopen("", "w", stdout);
 
-    int N, Q; std::cin >> N >> Q;
-
+    int N, M; std::cin >> N >> M;
     std::vector<std::vector<int>> ADJ(N);
     for (int i = 0; i < N-1; i++) {
-        int x; std::cin >> x;
-        ADJ[x-1].push_back(i+1);
+        int u, v; std::cin >> u >> v; u--; v--;
+        ADJ[u].push_back(v); ADJ[v].push_back(u);
     }
 
     segment_lca<int> LCA(N, ADJ);
-    for (int i = 0; i < Q; i++) {
-        int a, b; std::cin >> a >> b;
-        std::cout << LCA.find(a-1, b-1) + 1 << "\n";
+    std::vector<int> DP(N);
+    for (int i = 0; i < M; i++) {
+        int u, v; std::cin >> u >> v; u--; v--;
+        int lca = LCA.find(u, v);
+        DP[u]++; DP[v]++; DP[lca]--;
+        if (LCA.PAR[lca] != -1) DP[LCA.PAR[lca]]--;
     }
+
+    dfs(0, -1, ADJ, DP);
+    for (int i = 0; i < N; i++) std::cout << DP[i] << " ";
+    std::cout << "\n";
 }

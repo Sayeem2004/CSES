@@ -1,40 +1,49 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-vector<vector<ll>> A(200000);
-vector<ll> C(200000), T(200000);
-ll n;
 
-void dfs(ll v, ll p, ll d) {
-    T[0] += d;
+long long dfs1(int v, int p, int d, std::vector<std::vector<int>> &ADJ) {
+    long long ans = d;
+    for (int u : ADJ[v]) {
+        if (u == p) continue;
+        ans += dfs1(u, v, d+1, ADJ);
+    }
+    return ans;
+}
+
+void dfs2(int v, int p, std::vector<long long> &C, std::vector<std::vector<int>> &ADJ) {
     C[v] = 1;
-    for (auto x : A[v]) {
-        if (x == p) continue;
-        dfs(x, v, d+1);
-        C[v] += C[x];
+    for (int u : ADJ[v]) {
+        if (u == p) continue;
+        dfs2(u, v, C, ADJ);
+        C[v] += C[u];
     }
 }
 
-void dfs(ll v, ll p) {
-    for (auto x : A[v]) {
-        if (x == p) continue;
-        T[x] = T[v] + n - 2 * C[x];
-        dfs(x, v);
+void dfs3(int v, int p, int n, std::vector<long long> &D, std::vector<long long> &C, std::vector<std::vector<int>> &ADJ) {
+    for (int u : ADJ[v]) {
+        if (u == p) continue;
+        D[u] = D[v] + n - 2*C[u];
+        dfs3(u, v, n, D, C, ADJ);
     }
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    cin >> n;
-    for (int i = 0; i < n-1; i++) {
-        ll a, b; cin >> a >> b;
-        A[a-1].push_back(b-1);
-        A[b-1].push_back(a-1);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+    std::vector<std::vector<int>> ADJ(N);
+    for (int i = 0; i < N-1; i++) {
+        int u, v; std::cin >> u >> v;
+        ADJ[u-1].push_back(v-1);
+        ADJ[v-1].push_back(u-1);
     }
-    dfs(0, -1, 0);
-    dfs(0, -1);
-    for (int i = 0; i < n; i++)
-        cout << T[i] << " ";
-    cout << "\n";
+
+    std::vector<long long> C(N), D(N);
+    D[0] = dfs1(0, -1, 0, ADJ);
+    dfs2(0, -1, C, ADJ);
+    dfs3(0, -1, N, D, C, ADJ);
+
+    for (int i = 0; i < N; i++) std::cout << D[i] << " ";
+    std::cout << "\n";
 }

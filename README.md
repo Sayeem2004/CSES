@@ -82,7 +82,7 @@
 
 - [x] [Room Allocation](SortingAndSearching/1164.cpp) - Use a min heap priority queue to store an array of end time, counter, and index. Insert rooms by index into priority queue, if the top room ends before the current customer then remove it and insert the current customer into the room, else create a new room for the current customer by incrementing the counter. Once all customers are processed, print the counter and the room number for each customer using the index.
 
-- [x] [Factory Machines](SortingAndSearching/1620.cpp) - Given a time `T`, you can calculate the number of products that can be produced by iterating through all machines and adding `T / V[i]` to the total. Use binary search to find the minimum time `T` such that the total number of products is greater than or equal to `N`.
+- [x] [Factory Machines](SortingAndSearching/1620.cpp) - Given a time `T`, it's possible to calculate the number of products that can be produced by iterating through all machines and adding `T / V[i]` to the total. Use binary search to find the minimum time `T` such that the total number of products is greater than or equal to `N`.
 
 - [x] [Tasks And Deadlines](SortingAndSearching/1630.cpp) - It is optimal to do the tasks in order of duration from shortest to longest, consider arbitrary short task A, and long task B, and the two orders possible. Furthermore, for the same duration, it is optimal to do the tasks in order of deadline from earliest to latest, pretty self explanatory. Sort the tasks in this order and then iterate through them to calculate the total cost.
 
@@ -102,7 +102,7 @@
 
 - [x] [Subarray Distinct Values](SortingAndSearching/2428.cpp) - Use a two pointers method of iterating through the array, storing frequencies of numbers in a map. If the number of distinct numbers is less than or equal to `K`, then increment the right pointer, else increment the left pointer until the number of distinct numbers is less than or equal to `K`. At each valid iteration, add the size of the subarray to the answer.
 
-- [x] [Array Division](SortingAndSearching/1085.cpp) - Given a maximum subarray sum, you can calculate the number of subarrays necessary in `O(N)` by iterating through the array. Use binary search to find the minimum subarray sum that has a number of subarrays is less than or equal to `K`.
+- [x] [Array Division](SortingAndSearching/1085.cpp) - Given a maximum subarray sum, it's possible to calculate the number of subarrays necessary in `O(N)` by iterating through the array. Use binary search to find the minimum subarray sum that has a number of subarrays is less than or equal to `K`.
 
 - [x] [Sliding Median](SortingAndSearching/1076.cpp) - Use an ordered set to efficiently query for the median using `find_by_order`. Using a sliding window over the array to add and remove elements from the ordered set.
 
@@ -228,31 +228,31 @@
 
 ## Range Queries
 
-- [ ] [Static Range Sum Queries](RangeQueries/1646.cpp)
+- [x] [Static Range Sum Queries](RangeQueries/1646.cpp) - Use regular prefix sum, or a sparse table with the addition operation, or a segment tree with the addition operation and integer nodes to answer the queries.
 
-- [ ] [Static Range Minimum Queries](RangeQueries/1647.cpp)
+- [x] [Static Range Minimum Queries](RangeQueries/1647.cpp) - Use a sparse table with the minimum operation, or a segment tree with the minimum operation and integer nodes to answer the queries.
 
-- [ ] [Dynamic Range Sum Queries](RangeQueries/1648.cpp)
+- [x] [Dynamic Range Sum Queries](RangeQueries/1648.cpp) - Use a segment tree with the addition operation and integer nodes to answer the queries.
 
-- [ ] [Dynamic Range Minimum Queries](RangeQueries/1649.cpp)
+- [x] [Dynamic Range Minimum Queries](RangeQueries/1649.cpp) - Use a segment tree with the minimum operation and integer nodes to answer the queries.
 
-- [ ] [Range Xor Queries](RangeQueries/1650.cpp)
+- [x] [Range Xor Queries](RangeQueries/1650.cpp) - Use a segment tree with the xor operation and integer nodes to answer the queries.
 
-- [ ] [Range Update Queries](RangeQueries/1651.cpp)
+- [x] [Range Update Queries](RangeQueries/1651.cpp) - Store a difference array inside a segment tree with the addition operation, you can find the value of each index `i` by summing from `[0, i]` in the difference array. For updates, increment 'a' by 'u' and decrement 'b + 1' by 'u'.
 
-- [ ] [Forest Queries](RangeQueries/1652.cpp)
+- [x] [Forest Queries](RangeQueries/1652.cpp) - Use 2d prefix sums to answer the queries. The answer is the sum of the top left corner and the bottom right corner minus the top right corner and the bottom left corner, where the top left, top right, and bottom left are all shifted one outwards.
 
-- [ ] [Hotel Queries](RangeQueries/1143.cpp)
+- [x] [Hotel Queries](RangeQueries/1143.cpp) - Use a segment tree with the maximum operation and integer nodes. For each query start with `l = 0, r = N-1`, and binary search inwards to find the earliest hotel that can fit all guests. If the hotel is found, then update the segment tree and print the index, otherwise, print 0.
 
-- [ ] [List Removals](RangeQueries/1749.cpp)
+- [x] [List Removals](RangeQueries/1749.cpp) - Store a `1` in every index of the segment tree. For each query start with `l = 0, r = N-1`, and binary search inwards to find the position that sums to `k`. Once found, update the segment tree position to `0` and print the value of the index in the original array.
 
-- [ ] [Salary Queries](RangeQueries/1144.cpp)
+- [x] [Salary Queries](RangeQueries/1144.cpp) - Use an ordered_set whose elements are pairs `{v, i}` to store the salaries uniquely. Then use `lower_bound`, `upper_bound`, and `order_of_key` to answer the queries. Remember the update both the ordered_set and the original array when updating salaries.
 
-- [ ] [Prefix Sum Queries](RangeQueries/2166.cpp)
+- [x] [Prefix Sum Queries](RangeQueries/2166.cpp) - We will use a segment tree with a custom node `{pref: integer, sum: integer}`, which will represent the maximum prefix sum and sum of the subarray represented by the segment tree node. The combination operation will sum the two child node sums to get the current node sum, and take the maximum of the left node prefix and the sum of the the left node and right node prefix as the maximum prefix of the current node. Using this logic perform the queries as normal.
 
-- [ ] [Pizzeria Queries](RangeQueries/2206.cpp)
+- [x] [Pizzeria Queries](RangeQueries/2206.cpp) - Consider an arbitrary building `k`, all pizzerias at index `i` below `k` will have a cost `c+k-i`, and all pizzerias at index `i` above `k` will have a cost `c+i-k`. Note that for a given `k` as long as we query completely below it or above it, they all have the same addition or subtraction of `k`, so we can factor it out. So we will use a segment tree representing below `k` storing nodes of cost and index with the combination operation being the minimum of `c-i`, and a segemnt tree representing above `k` storing nodes of cost and index with the combination operation being the minimum of `c+i`. Then we can answer the queries by querying the segment tree below `k` and the segment tree above `k` and taking the minimum of the two.
 
-- [ ] [Subarray Sum Queries](RangeQueries/1190.cpp)
+- [x] [Subarray Sum Queries](RangeQueries/1190.cpp) - Using a segment tree in which each node will store the maximum prefix, suffice, sum, and subarray sum of the range it represents. The combination operation will be `pref = max(a.pref, a.sum+b.pref)`, `suff = max(b.suff, b.sum+a.suff)`, `sum = a.sum + b.sum`, `sub = max(a.sub, b.sub, a.suff+b.pref)`. Then we can answer the queries as normal by querying the segment tree and returning the subarray sum.
 
 - [ ] [Distinct Values Queries](RangeQueries/1734.cpp)
 
@@ -268,25 +268,25 @@
 
 ## Tree Algorithms
 
-- [ ] [Subordinates](TreeAlgorithms/1674.cpp)
+- [x] [Subordinates](TreeAlgorithms/1674.cpp) - Starting from the root of `0` perform a DFS down the tree and store the number of subordinates for each node. The subordinates of a node `u` is the sum of the subordinates of all its children and its children.
 
-- [ ] [Tree Matching](TreeAlgorithms/1130.cpp)
+- [x] [Tree Matching](TreeAlgorithms/1130.cpp) - We can consider `DP1[v]` as the maximum matching set of the subtree rooted at `v` where `v` is not included in the matching, and `DP2[v]` as the maximum matching set of the subtree rooted at `v` where `v` is included in the matching. Then we can use a DFS to calculate `DP1` and `DP2` for each node. For `DP1` we can sum the maximum of `DP1` and `DP2` of each child, and for `DP2` we choose a child to connect with and `DP1` of that child, along with the sum of the maximum of `DP1` and `DP2` of each other child plus one. Note you can use `DP1` of `v` to speed up the calculation, but make sure to subtract the right amount from the sum.
 
-- [ ] [Tree Diameter](TreeAlgorithms/1131.cpp)
+- [x] [Tree Diameter](TreeAlgorithms/1131.cpp) - If a dfs is started from an arbitrary node and finds the farthest node it will be one of the ends of the diameter of the tree. Then if we start a dfs from that node in a similar fashion, it will reach the other end of the diameter of the tree. The distance between the two nodes will be the diameter of the tree.
 
-- [ ] [Tree Distances I](TreeAlgorithms/1132.cpp)
+- [x] [Tree Distances I](TreeAlgorithms/1132.cpp) - As from the previous problem, we see that if we dfs from an arbitrary node the farthest node is one of the diameters. So for each node we will find its distance from the diameters and then take the maximum. We can do this by finding the diameters, and then performing a dfs from them.
 
-- [ ] [Tree Distances II](TreeAlgorithms/1133.cpp)
+- [x] [Tree Distances II](TreeAlgorithms/1133.cpp) - We can calculate distance from the root node to every other node using a simple dfs, now the observation is that if we shift from the root node to a child node the distances of the nodes in that subtree (lets assume there are `c` of them) all decrease by 1, while the distances of the nodes not in that subtree (there would be `n-c` of them) all increase by 1. So our change from a node `v` to one of its children 'x' is equivalent to `dist[v] + (n-c) - c`. We can now dfs down the tree to get all the distances.
 
-- [ ] [Company Queries I](TreeAlgorithms/1687.cpp)
+- [x] [Company Queries I](TreeAlgorithms/1687.cpp) - Direct application of the binary lifting or binary jumping technique. To find the `k`th parent of a node, for through its binary representation and jump upwards by `2^i` if the `i`th bit is set. Make sure to handle the case where the node is not in the tree by returning `-1`.
 
-- [ ] [Company Queries II](TreeAlgorithms/1688.cpp)
+- [x] [Company Queries II](TreeAlgorithms/1688.cpp) - Direct application of the least common ancestor technique. This can be either be implemented using a segment tree or by using the binary lifting technique like in the previous problem. In the segment tree technique we search for the node that has the least depth in between our first two sightings of the node. In the binary lifting technique we jump upwards while two nodes are ancestors of each other, and the direct parent after this process is the least common ancestor.
 
-- [ ] [Distance Queries](TreeAlgorithms/1135.cpp)
+- [x] [Distance Queries](TreeAlgorithms/1135.cpp) - The shortest path between two nodes in a tree is to go up to the least common ancestor and then down to the other node. So the distance of this path is `dist[a] + dist[b] - 2*dist[lca(a,b)]`. Calculate this using the segment tree technique or the binary lifting technique.
 
-- [ ] [Counting Paths](TreeAlgorithms/1136.cpp)
+- [x] [Counting Paths](TreeAlgorithms/1136.cpp) - The optimal path is the one that goes through the least common ancestor of the two nodes. So we want to increment the count by each of these nodes in this path by `1`. One way of doing this efficiently is to process all queries and then perform a dfs where counts from children are added to the parent. So we increment nodes `a` and `b` by `1`, decrement the least common ancestor by `1`, and decrement the parent of the least common ancestor by `1` if it exists. If we count upwards using the dfs, this would lead to all nodes in the path incrementing by `1` and all other nodes remaining unchanged.
 
-- [ ] [Subtree Queries](TreeAlgorithms/1137.cpp)
+- [x] [Subtree Queries](TreeAlgorithms/1137.cpp) - This sounds like a segment tree problem, except the problem is that the queries we want to perform are not inherently a contiguous subarray. We have to figure out a way to map the nodes such that a node and its subtrees are contiguous. We can do this by performing a dfs and assigning each node an incrementing counter as the left bound, and when all children are processed we assign the right bound as the current counter value. Now we can perform a segment tree query on the mapped values.
 
 - [ ] [Path Queries](TreeAlgorithms/1138.cpp)
 
@@ -308,9 +308,9 @@
 
 - [x] [Exponentiation II](Mathematics/1096.cpp) - By Fermat's little theorem, `a^(p-1) = 1 mod p` if `a` and `p` are coprime. Thus `a^b^c mod p = a^(b^c mod p-1) mod p`, which can be calculated using binary exponentiation and modular exponentiation like above.
 
-- [ ] [Counting Divisors](Mathematics/1713.cpp)
+- [x] [Counting Divisors](Mathematics/1713.cpp) - If `N = p1^a * p2^b * ...` then it has `(a+1) * (b+1) * ...` factors. We can calculate the prime factorization of `N` and then calculate the number of factors using the above formula.
 
-- [ ] [Common Divisors](Mathematics/1081.cpp)
+- [x] [Common Divisors](Mathematics/1081.cpp) - We can iterate through the possible divisors from largest `1e6` to smallest `1`. For each divisor `d`, we iterate upwards by `d` and count all the multiples of `d` that are from the array. If the count is greater than `1` then we have found a common divisor, and its the largest one since we are iterating downwards.
 
 - [ ] [Sum of Divisors](Mathematics/1082.cpp)
 
@@ -403,19 +403,19 @@ Use modular inverse and precomputation.
 
 ## Geometry
 
-- [ ] [Point Location Test](Geometry/2189.cpp)
+- [x] [Point Location Test](Geometry/2189.cpp) - Direct application of 2d cross product, which is 3rd component of 3d cross product assuming Z coordinate is 0. If cross product of X and Y is positive then X is CCW of Y, negative is CW, and 0 is neither. So if we have a line AB and point C, we can check cross product of AB and AC to get our results using the cases above. For this problem and all continuing geometry problems make sure to keep an eye out for overflow because cross product is doing multiplication.
 
-- [ ] [Line Segment Intersection](Geometry/2190.cpp)
+- [x] [Line Segment Intersection](Geometry/2190.cpp) - This is similar to point location test but with more cases. First case is if line segment AB and CD are parallel (can be checked by cross = 0). If they are parallel, then we need to check if they are colinear. If they aren't then no intersection is possible, if they are then just determine if the bounding boxes (boxes formed by min and max x and y coordinates) of each line intersect. If they aren't parallel that means the lines containing AB and CD intersect, but not necessarily the line segments. So we need to check if the intersection point is on both line segments. We can do this by checking if one point of the line segment is to the left of the other line, and the other point is to the right of the other line. If this is true for both lines then the intersection point is on both line segments, otherwise it isn't.
 
-- [ ] [Polygon Area](Geometry/2191.cpp)
+- [x] [Polygon Area](Geometry/2191.cpp) - Choose a random point on the polygon, lets choose index 0. If we draw triangles from index 0 to every consecutive pairs of points, the triangles will span the area of the polygon, even if it is concave (cross product will add and subtract from itself). The area of each of these triangles is just cross product of the two vectors divided by 2, however we want twice area, so we don't actually divide by 2. We loop through and add all these areas up and that is our answer.
 
-- [ ] [Point In Polygon](Geometry/2192.cpp)
+- [x] [Point In Polygon](Geometry/2192.cpp) - First lets determine if a point V is on the boundary of the polygon. To check this we need to check if V is colinear with an arbitrary edge AB (cross product is 0). If its colinear, we just need to check if the point is in the boundary box of that edge. Now if V isn't on the boundary then its either completely inside or completely outside the polygon. Consider a ray drawn from V to some infinite point, if we count the number of sides that this ray intersects we get our answer. If the number is odd the point is inside, else it is outside the polygon. Remember to not use too large of a number for the infinite ray representation to avoid overflow.
 
-- [ ] [Polygon Lattice Points](Geometry/2193.cpp)
+- [x] [Polygon Lattice Points](Geometry/2193.cpp) - A theorem called Pick's theorem states that A = l + b/2 - 1. Area of a polygon with integer vertices as an expression of lattice points and boundary points. We will double the equation to avoid integer division, we can find 2x area already, so we just need to figure out the number of boundary points. For a given line segment AB we can find points that land on integer coordinates by following the slope (m = y/x), so moving gcd(x, y) to the right, and moving y/x * gcd(x, y) up. So number of coordinates on a line segment is gcd(x, y) + 2, however that will lead to double counting if we do it for every face, so we will do gcd(x, y) + 1, add it all up to get number of boundary points. Then simply apply Pick's theorem.
 
-- [ ] [Minimum Euclidean Distance](Geometry/2194.cpp)
+- [x] [Minimum Euclidean Distance](Geometry/2194.cpp) - If we sort the points by X coordinate, we can iterate across the points from left to right and keep a set of points that are within a certain distance by X coordinate. Then for each point we calculate the minimum distance to the points in the set. We can do this by sorting the points by Y coordinate and iterating through the points in the set from bottom to top. This will reduce the time complexity from O(N^2) to O(N log N) as long as we keep the distance small enough. We can do this by making this distance the smallest distance we have encountered so far. Remember to make the initial distance very larger to avoid edge cases.
 
-- [ ] [Convex Hull](Geometry/2195.cpp)
+- [x] [Convex Hull](Geometry/2195.cpp) - The Graham Scan algorithm can be used here. Sort the points by X coordinate. The left most point must be in the convex hull. Now if we were just to add points to the hull as we go, the hull will likely not be convex, so to fix this we will backtrack when we find a new point. If we iterate to a new point, and that point is more CCW than the current last point, when compared to the second to last point, then we have to remove the last point in order for the hull to remain convex. This can be checked through cross product of AB and AC, and we can cotninue removing until this newest point is furthest CCW. Now one iteration of this will get the top half of the convex hull, but we can just reverse the points and repeat this to get the bottom half. Remember to remove duplicate points at the end of each half.
 
 ## Advanced Techniques
 

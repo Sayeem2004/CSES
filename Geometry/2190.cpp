@@ -23,11 +23,26 @@ int main() {
     // freopen("", "r", stdin);
     // freopen("", "w", stdout);
 
-    int N; std::cin >> N;
-    std::vector<vec<long long>> P(N);
-    for (vec<long long> &p : P) p.read2();
+    int T; std::cin >> T; while (T--) {
+        vec<long long> A, B, C, D;
+        A.read2(); B.read2(); C.read2(); D.read2();
+        vec<long long> AB = B - A, AC = C - A, AD = D - A;
+        vec<long long> CD = D - C, CA = A - C, CB = B - C;
 
-    long long area = 0;
-    for (int i = 0; i < N; i++) area += P[0].tri2(P[i], P[(i + 1) % N]);
-    std::cout << std::abs(area) << "\n";
+        long long parallel = AB.cross2(CD), colinear = AB.cross2(AC);
+        if (parallel == 0) {
+            if (colinear != 0) { std::cout << "NO\n"; continue; }
+            if (std::max(A.X, B.X) < std::min(C.X, D.X)) { std::cout << "NO\n"; continue; }
+            if (std::max(A.Y, B.Y) < std::min(C.Y, D.Y)) { std::cout << "NO\n"; continue; }
+            if (std::max(C.X, D.X) < std::min(A.X, B.X)) { std::cout << "NO\n"; continue; }
+            if (std::max(C.Y, D.Y) < std::min(A.Y, B.Y)) { std::cout << "NO\n"; continue; }
+            std::cout << "YES\n"; continue;
+        }
+
+        long long cross1 = AB.cross2(AC), cross2 = AB.cross2(AD);
+        long long cross3 = CD.cross2(CA), cross4 = CD.cross2(CB);
+        if ((cross1 < 0 && cross2 < 0) || (cross1 > 0 && cross2 > 0)) { std::cout << "NO\n"; continue; }
+        if ((cross3 < 0 && cross4 < 0) || (cross3 > 0 && cross4 > 0)) { std::cout << "NO\n"; continue; }
+        std::cout << "YES\n";
+    }
 }

@@ -1,39 +1,25 @@
 #include <bits/stdc++.h>
-#define ll long long
 
-using namespace std;
-
-multiset<int> pf(int n) {
-  multiset<int> f;
-  for (int x = 2; x * x <= n; x++) {
-    while (n % x == 0) {
-      f.insert(x);
-      n /= x;
+void factor(int n, std::unordered_map<int, int> &M) {
+    while (n % 2 == 0) { M[2]++; n /= 2; }
+    for (int i = 3; i * i <= n; i += 2) {
+        while (n % i == 0) { M[i]++; n /= i; }
     }
-  }
-  if (n > 1) {
-    f.insert(n);
-  }
-  return f;
+    if (n > 1) M[n]++;
 }
 
 int main() {
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  int q;
-  cin >> q;
-  for (int i = 0; i < q; i++) {
-    int y;
-    cin >> y;
-    multiset<int> p = pf(y);
-    set<int> p2;
-    for (auto q : p) {
-      p2.insert(q);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int T; std::cin >> T; while (T--) {
+        int N; std::cin >> N;
+        std::unordered_map<int, int> M;
+        factor(N, M);
+
+        long long ans = 1;
+        for (auto &p : M) ans *= (p.second + 1);
+        std::cout << ans << "\n";
     }
-    int ans = 1;
-    for (auto c : p2) {
-      ans *= (p.count(c) + 1);
-    }
-    cout << ans << "\n";
-  }
 }

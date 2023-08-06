@@ -1,30 +1,31 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
-vector<vector<int>> A(200000);
-vector<int> DP1(200000), DP2(200000);
 
-void dfs(int v, int p) {
-    for (auto x : A[v]) {
-        if (x == p) continue;
-        dfs(x, v);
-        DP1[v] += max(DP1[x], DP2[x]);
+void dfs(int v, int p, const std::vector<std::vector<int>> &ADJ, std::vector<int> &DP1, std::vector<int> &DP2) {
+    for (int u : ADJ[v]) {
+        if (u == p) continue;
+        dfs(u, v, ADJ, DP1, DP2);
+        DP1[v] += std::max(DP1[u], DP2[u]);
     }
-    for (auto x : A[v]) {
-        if (x == p) continue;
-        DP2[v] = max(DP2[v], DP1[x]+1+DP1[v] - max(DP1[x], DP2[x]) );
+    for (int u : ADJ[v]) {
+        if (u == p) continue;
+        DP2[v] = std::max(DP2[v], (DP1[v] - std::max(DP1[u], DP2[u])) + DP1[u] + 1);
     }
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int n; cin >> n;
-    for (int i = 0; i < n-1; i++) {
-        int a, b; cin >> a >> b;
-        A[a-1].push_back(b-1);
-        A[b-1].push_back(a-1);
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+    std::vector<std::vector<int>> ADJ(N);
+    for (int i = 0; i < N-1; i++) {
+        int a, b; std::cin >> a >> b;
+        ADJ[a-1].push_back(b-1);
+        ADJ[b-1].push_back(a-1);
     }
-    dfs(0, -1);
-    cout << max(DP1[0], DP2[0]) << "\n";
+
+    std::vector<int> DP1(N), DP2(N);
+    dfs(0, -1, ADJ, DP1, DP2);
+    std::cout << std::max(DP1[0], DP2[0]) << "\n";
 }
