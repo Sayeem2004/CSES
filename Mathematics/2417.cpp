@@ -23,24 +23,18 @@ int main() {
     // freopen("", "r", stdin);
     // freopen("", "w", stdout);
 
-    long long N, K; std::cin >> N >> K;
-    std::vector<long long> V(K);
-    for (long long &v : V) std::cin >> v;
+    int N, MX = 0; std::cin >> N;
+    std::unordered_map<int, int> M;
+    for (int i = 0; i < N; i++) { int x; std::cin >> x; M[x]++; MX = std::max(MX, x); }
 
     long long ans = 0;
-    num_cache<long long> NC(10);
-    for (long long i = 1; i < 1 << K; i++) {
-        long long prod = 1, cnt = 0;
-        bool br = false;
+    num_cache<long long> NC(MX);
+    for (int i = 1; i <= MX; i++) {
+        if (!NC.mob(i)) continue;
+        long long cnt = 0;
 
-        for (long long q = 0; q < K; q++) {
-            if (i & (1 << q)) {
-                if (NC.mover(prod, V[q])) { br = true; break; }
-                prod *= V[q]; cnt++;
-            }
-        }
-
-        if (!br) ans += (cnt % 2 ? 1 : -1) * N / prod;
+        for (int q = i; q <= MX; q += i) cnt += M[q];
+        ans += NC.mob(i) * cnt * (cnt - 1) / 2;
     }
 
     std::cout << ans << "\n";

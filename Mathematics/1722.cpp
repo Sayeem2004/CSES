@@ -1,39 +1,36 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define int64 int64_t
 
-void multiply(int64 F[2][2], int64 M[2][2]) {
-    int64 x = F[0][0] * M[0][0] + F[0][1] * M[1][0];
-    int64 y = F[0][0] * M[0][1] + F[0][1] * M[1][1];
-    int64 z = F[1][0] * M[0][0] + F[1][1] * M[1][0];
-    int64 w = F[1][0] * M[0][1] + F[1][1] * M[1][1];
-    x %= (int64)1e9+7;
-    y %= (int64)1e9+7;
-    z %= (int64)1e9+7;
-    w %= (int64)1e9+7;
-    F[0][0] = x;
-    F[0][1] = y;
-    F[1][0] = z;
-    F[1][1] = w;
-}
+template<typename T> struct matrix { // Variables & Constructors
+    T R, C, D, MOD; std::vector<std::vector<T>> M; matrix(T N) : matrix(N, N) { }
+    matrix(T R, T C, T D = 0, T MOD = 1e9+7) : R(R), C(C), D(D), MOD(MOD), M(R, std::vector<T>(C, D)) { }
+    matrix(std::vector<std::vector<T>> M, T MOD = 1e9+7) : R(M.size()), C(M[0].size()), MOD(MOD), M(M) { }
 
-void power(int64 F[2][2], int64 n) {
-    if (n == 0 || n == 1) return;
-    int64 M[2][2] = {{1, 1}, {1, 0}};
-    power(F, n/2);
-    multiply(F, F);
-    if (n % 2 != 0) multiply(F, M);
-}
+    matrix operator +(const matrix &O) const { matrix A(R, C); for (T i = 0; i < R; i++) // Operators
+        for (T q = 0; q < C; q++) A.M[i][q] = (M[i][q] + O.M[i][q]) % MOD; return A; }
+    matrix operator -(const matrix &O) const { matrix A(R, C); for (T i = 0; i < R; i++)
+        for (T q = 0; q < C; q++) A.M[i][q] = (M[i][q] - O.M[i][q]) % MOD; return A; }
+    matrix operator *(const matrix &O) const { matrix A(R, O.C); for (T i = 0; i < R; i++) for (T q = 0; q < O.C; q++)
+        for (T r = 0; r < C; r++) A.M[i][r] = (A.M[i][r] + M[i][q] * O.M[q][r]) % MOD; return A; }
+    matrix operator ^(const T &P) const { if (!P) { matrix A(R); for (T i = 0; i < R; i++) A.M[i][i] = 1; return A; }
+        matrix A = *this ^ (P >> 1); A *= A; if (P & 1) A *= *this; return A; }
+    std::vector<T> operator &(const std::vector<T> &V) const { std::vector<T> A(R); for (T i = 0; i < R; i++)
+        for (T q = 0; q < C; q++) A[i] = (A[i] + M[i][q] * V[q]) % MOD; return A; }
 
+    matrix operator +=(const matrix &O) { return *this = *this + O; } // Assignments
+    matrix operator -=(const matrix &O) { return *this = *this - O; }
+    matrix operator *=(const matrix &O) { return *this = *this * O; }
+    matrix operator ^=(const T &P) { return *this = *this ^ P; }
+    void print() { for (T i = 0; i < R; i++) for (T q = 0; q < C; q++) std::cout << M[i][q] << " \n"[q == C-1]; }
+};
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    int64 n; cin >> n;
-    int64 F[2][2] = {{1, 1}, {1, 0}};
-    if (n == 0) {
-        cout << 0 << "\n"; return 0;
-    }
-    power(F, n-1);
-    cout << F[0][0] << "\n";
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    matrix<long long> M(2, 2);
+    M.M[0][0] = M.M[0][1] = M.M[1][0] = 1;
+
+    long long N; std::cin >> N; M ^= N;
+    std::cout << M.M[0][1] << "\n";
 }

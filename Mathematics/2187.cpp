@@ -1,65 +1,45 @@
 #include <bits/stdc++.h>
-using namespace std;
-#define ll int64_t
 
-int maxn = 1000000;
-int mod = 1000000007;
-vector<ll> FN(maxn+1), FI(maxn+1), NI(maxn+1), DR(maxn+1);
+template<typename T> struct combo_cache {
+    std::vector<T> INV, IFT, FCT, DRG; T MXN, MOD; // Variables
+    combo_cache(T n = 1e6, T m = 1e9+7) : MXN(n), MOD(m) { init(); } // Constructors
 
-void inv() {
-    NI[0] = NI[1] = 1;
-    for (int i = 2; i <= maxn; i++)
-        NI[i] = (NI[mod%i] * (mod-mod/i)) % mod;
-}
+    void init() { INV.assign(MXN + 1, 0); INV[0] = INV[1] = 1; // Mutators
+        for (T i = 2; i <= MXN; i++) INV[i] = (MOD - MOD/i) * INV[MOD%i] % MOD;
+        IFT.assign(MXN + 1, 0); IFT[0] = IFT[1] = 1;
+        for (T i = 1; i <= MXN; i++) IFT[i] = IFT[i-1] * INV[i] % MOD;
+        FCT.assign(MXN + 1, 0); FCT[0] = FCT[1] = 1;
+        for (T i = 1; i <= MXN; i++) FCT[i] = FCT[i-1] * i % MOD;
+        DRG.assign(MXN + 1, 0); DRG[0] = 1; DRG[1] = 0;
+        for (T i = 2; i <= MXN; i++) DRG[i] = (i-1) * (DRG[i-1] + DRG[i-2]) % MOD; }
 
-void finv() {
-    FI[0] = FI[1] = 1;
-    for (int i = 2; i <= maxn; i++)
-        FI[i] = (NI[i] * FI[i-1]) % mod;
-}
-
-void fact(int spec) {
-    FN[0] = FN[1] = 1;
-    for (int i = 2; i <= maxn; i++) {
-        if (i == spec) FN[i] = FN[i-1];
-        else FN[i] = (FN[i-1] * i) % mod;
-    }
-}
-
-void derang() {
-    DR[0] = 1; DR[1] = 0;
-    for (int i = 2; i <= maxn; i++)
-        DR[i] = (DR[i-1]+DR[i-2]) * (i-1) % mod;
-}
-
-ll nCr(ll n, ll r) {
-    ll ans = FN[n] * FI[r] % mod * FI[n-r] % mod;
-    return ans;
-}
+    T inv(T n) { return (n >= 0 && n <= MXN ? INV[n] : -1); } // Accessors
+    T ift(T n) { return (n >= 0 && n <= MXN ? IFT[n] : -1); }
+    T fct(T n) { return (n >= 0 && n <= MXN ? FCT[n] : -1); }
+    T drg(T n) { return (n >= 0 && n <= MXN ? DRG[n] : -1); }
+    T pow(T n, T k) { T r = 1; while (k > 0) { if (k&1) r = r*n%MOD; n = n*n%MOD; k >>= 1; } return r; }
+    T cat(T n) { return (n >= 0 && n <= MXN/2 ? bin(2*n, n) * inv(n+1) % MOD : -1); }
+    T bin(T n, T k) { return (k < n ? fct(n) * ift(k) % MOD * ift(n-k) % MOD : -1); }
+    T str(T n, T k) { return bin(n + k - 1, n); }
+};
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0); cout.tie(0);
-    ll t; cin >> t;
-    if (t % 2 == 1) {
-        cout << 0 << "\n";
-        return 0;
+    std::ios::sync_with_stdio(0); std::cin.tie(0);
+    // freopen("", "r", stdin);
+    // freopen("", "w", stdout);
+
+    int N; std::cin >> N;
+    std::string S; std::cin >> S;
+    if (N % 2 == 1) { std::cout << 0 << "\n"; return 0; }
+
+    long long k = 0;
+    for (int i = 0; i < S.size(); i++) {
+        if (S[i] == '(') k++; else k--;
+        if (k < 0 || k > N/2) { std::cout << 0 << "\n"; return 0; }
     }
-    string s; cin >> s;
-    ll k = 0;
-    for (int i = 0; i < s.size(); i++) {
-        if (s[i] == '(') k++;
-        else k--;
-        if (k < 0 || k > t/2) {
-            cout << 0 << "\n";
-            return 0;
-        }
-    }
-    ll n = (t-s.size()-k)/2;
-    if (n == 0) {
-        cout << 1 << "\n";
-        return 0;
-    }
-    inv(); finv(); fact(n+k+1);
-    cout << ((k+1) * nCr(2*n+k, n)) % mod << "\n";
+
+    combo_cache<long long> CC;
+    long long r = (N - S.size() - k) / 2;
+    if (r == 0) { std::cout << 1 << "\n"; return 0; }
+    std::cout << CC.bin(2*r+k, r) * (k+1) % CC.MOD * CC.inv(r+k+1) % CC.MOD << "\n";
 }
